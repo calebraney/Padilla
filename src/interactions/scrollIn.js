@@ -4,16 +4,16 @@ export const scrollIn = function (gsapContext) {
   //animation ID
   const ANIMATION_ID = 'scrollin';
   // selectors
-  const SCROLLIN_ELEMENT = 'data-ix-scrollin';
+  const ELEMENT = 'data-ix-scrollin';
   // types of scrolling elements (value for scrollin element attribute)
-  const SCROLLIN_HEADING = 'heading';
-  const SCROLLIN_ITEM = 'item';
-  const SCROLLIN_CONTAINER = 'container';
-  const SCROLLIN_STAGGER = 'stagger';
-  const SCROLLIN_RICH_TEXT = 'rich-text';
-  const SCROLLIN_IMAGE_WRAP = 'image-wrap';
-  const SCROLLIN_IMAGE = 'image';
-  const SCROLLIN_LINE = 'line';
+  const HEADING = 'heading';
+  const ITEM = 'item';
+  const CONTAINER = 'container';
+  const STAGGER = 'stagger';
+  const RICH_TEXT = 'rich-text';
+  const IMAGE_WRAP = 'image-wrap';
+  const IMAGE = 'image';
+  const LINE = 'line';
 
   //options
   const SCROLL_TOGGLE_ACTIONS = 'data-ix-scrollin-toggle-actions';
@@ -200,33 +200,33 @@ export const scrollIn = function (gsapContext) {
   };
 
   //get all elements and apply animations
-  const items = gsap.utils.toArray(`[${SCROLLIN_ELEMENT}]`);
+  const items = gsap.utils.toArray(`[${ELEMENT}]`);
   items.forEach((item) => {
     if (!item) return;
     //check breakpoints and quit function if set on specific breakpoints
     let runOnBreakpoint = checkBreakpoints(item, ANIMATION_ID, gsapContext);
     if (runOnBreakpoint === false) return;
     //find the type of the scrolling animation
-    const scrollInType = item.getAttribute(SCROLLIN_ELEMENT);
-    if (scrollInType === SCROLLIN_HEADING) {
+    const scrollInType = item.getAttribute(ELEMENT);
+    if (scrollInType === HEADING) {
       scrollInHeading(item);
     }
-    if (scrollInType === SCROLLIN_ITEM) {
+    if (scrollInType === ITEM) {
       scrollInItem(item);
     }
-    if (scrollInType === SCROLLIN_IMAGE) {
+    if (scrollInType === IMAGE) {
       scrollInImage(item);
     }
-    if (scrollInType === SCROLLIN_LINE) {
+    if (scrollInType === LINE) {
       scrollInLine(item);
     }
-    if (scrollInType === SCROLLIN_CONTAINER) {
+    if (scrollInType === CONTAINER) {
       scrollInContainer(item);
     }
-    if (scrollInType === SCROLLIN_STAGGER) {
+    if (scrollInType === STAGGER) {
       scrollInStagger(item);
     }
-    if (scrollInType === SCROLLIN_RICH_TEXT) {
+    if (scrollInType === RICH_TEXT) {
       scrollInRichText(item);
     }
   });

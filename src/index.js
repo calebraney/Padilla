@@ -1,6 +1,7 @@
 import { attr } from './utilities';
 import { hoverActive } from './interactions/hoverActive';
 import { scrollIn } from './interactions/scrollIn';
+import { scrolling } from './interactions/scrolling';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Comment out for production
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hoverActive(gsapContext);
         //conditional interactions
         if (!reduceMotion) {
+          scrolling(gsapContext);
           scrollIn(gsapContext);
         }
       }
