@@ -19,6 +19,80 @@ document.addEventListener('DOMContentLoaded', function () {
   //Global Variables
   const resetScrollTriggers = document.querySelectorAll('[data-ix-reset]');
 
+  const workHeroSlider = function () {
+    //selectors
+    const WRAP = '[data-ix-workslider="wrap"]';
+    const SWIPER_BG = '[data-ix-workslider="swiper-bg"]';
+    const SWIPER_THUMBS = '[data-ix-workslider="swiper-thumbs"]';
+    const SWIPER_TEXT = '[data-ix-workslider="swiper-text"]';
+    const SLIDE_THUMBS = '[data-ix-workslider="thumbs-slide"]';
+    const CURRENT_SLIDE = '[data-ix-workslider="current-slide"]';
+    const TOTAL_SLIDE = '[data-ix-workslider="total-slides"]';
+    //options
+    //classes
+    const ACTIVE_CLASS = 'is-active';
+
+    //utility function to add 0 to number
+    function numberWithZero(num) {
+      if (num < 10) {
+        return '0' + num;
+      } else {
+        return num;
+      }
+    }
+
+    document.querySelectorAll(WRAP).forEach(function (sliderComponent) {
+      if (!sliderComponent) return;
+      //get the total slides
+      let totalSlides = numberWithZero(sliderComponent.querySelectorAll(SLIDE_THUMBS).length);
+      //set the total slides into the total text content
+      sliderComponent.querySelector(TOTAL_SLIDE).textContent = totalSlides;
+
+      const bgSwiper = new Swiper(sliderComponent.querySelector(SWIPER_BG), {
+        slidesPerView: 1,
+        speed: 400,
+        effect: 'fade',
+        allowTouchMove: false,
+      });
+
+      const thumbsSwiper = new Swiper(sliderComponent.querySelector(SWIPER_THUMBS), {
+        slidesPerView: 1,
+        speed: 600,
+        loop: true,
+        loopedSlides: 8,
+        slideToClickedSlide: true,
+      });
+
+      const textSwiper = new Swiper(sliderComponent.querySelector(SWIPER_TEXT), {
+        slidesPerView: 'auto',
+        speed: 600,
+        loop: true,
+        loopedSlides: 8,
+        slideToClickedSlide: true,
+        mousewheel: true,
+        keyboard: true,
+        centeredSlides: true,
+        slideActiveClass: ACTIVE_CLASS,
+        slideDuplicateActiveClass: ACTIVE_CLASS,
+        thumbs: {
+          swiper: bgSwiper,
+        },
+        navigation: {
+          nextEl: sliderComponent.querySelector('.swiper-next'),
+          prevEl: sliderComponent.querySelector('.swiper-prev'),
+        },
+      });
+
+      textSwiper.controller.control = thumbsSwiper;
+      thumbsSwiper.controller.control = textSwiper;
+
+      textSwiper.on('slideChange', function (e) {
+        let slideNumber = numberWithZero(e.realIndex + 1);
+        sliderComponent.querySelector(CURRENT_SLIDE).textContent = slideNumber;
+      });
+    });
+  };
+
   //////////////////////////////
   //Control Functions on page load
   const gsapInit = function () {
@@ -33,8 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
-        //functional interactions
+        //global interactions
         hoverActive(gsapContext);
+        //custom interactions
+        workHeroSlider();
         //conditional interactions
         if (!reduceMotion) {
           scrolling(gsapContext);
