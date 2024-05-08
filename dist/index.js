@@ -824,24 +824,28 @@
     const OPTION_KEEP_ONE_ACTIVE = "data-ix-clickactive-keep-one-active";
     const INTERACTION_DURATION = 800;
     const ACTIVE_CLASS = "is-active";
-    const clickWraps = gsap.utils.toArray(WRAP);
-    if (clickWraps.length === 0 || clickWraps === void 0)
-      return;
-    clickWraps.forEach((wrap) => {
-      const triggers = Array.from(wrap.querySelectorAll(TRIGGER));
-      let activeClass = attr(ACTIVE_CLASS, wrap.getAttribute(OPTION_ACTIVE_CLASS));
-      let firstOpen = attr(false, wrap.getAttribute(OPTION_FIRST_ACTIVE));
-      let oneActive = attr(false, wrap.getAttribute(OPTION_ONE_ACTIVE));
-      let keepOneActive = attr(false, wrap.getAttribute(OPTION_KEEP_ONE_ACTIVE));
-      let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
-      if (runOnBreakpoint === false)
-        return;
+    const clickActiveList = function(rootElement) {
+      const triggers = Array.from(rootElement.querySelectorAll(TRIGGER));
+      let activeClass = ACTIVE_CLASS;
+      let firstOpen = false;
+      let oneActive = false;
+      let keepOneActive = false;
+      if (rootElement !== document) {
+        activeClass = attr(ACTIVE_CLASS, rootElement.getAttribute(OPTION_ACTIVE_CLASS));
+        firstOpen = attr(false, rootElement.getAttribute(OPTION_FIRST_ACTIVE));
+        oneActive = attr(false, rootElement.getAttribute(OPTION_ONE_ACTIVE));
+        keepOneActive = attr(false, rootElement.getAttribute(OPTION_KEEP_ONE_ACTIVE));
+        let runOnBreakpoint = checkBreakpoints(rootElement, ANIMATION_ID, gsapContext);
+        if (runOnBreakpoint === false)
+          return;
+      } else {
+      }
       const activateItems = function(item, makeActive = true) {
         if (!item)
           return;
         let hasTarget = true;
         const itemID = item.getAttribute(ID);
-        const targetEl = wrap.querySelector(`${TARGET}[${ID}="${itemID}"]`);
+        const targetEl = rootElement.querySelector(`${TARGET}[${ID}="${itemID}"]`);
         if (!itemID || !targetEl) {
           hasTarget = false;
         }
@@ -904,7 +908,15 @@
       if (firstOpen) {
         activateItems(firstItem);
       }
-    });
+    };
+    const clickWraps = gsap.utils.toArray(WRAP);
+    if (clickWraps.length === 0 || clickWraps === void 0) {
+      clickActiveList(document);
+    } else {
+      clickWraps.forEach((wrap) => {
+        clickActiveList(wrap);
+      });
+    }
   };
 
   // src/interactions/scrollIn.js

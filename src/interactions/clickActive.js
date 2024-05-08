@@ -18,23 +18,31 @@ export const clickActive = function (gsapContext) {
   const INTERACTION_DURATION = 800;
 
   const ACTIVE_CLASS = 'is-active';
-  //get elements
-  const clickWraps = gsap.utils.toArray(WRAP);
-  if (clickWraps.length === 0 || clickWraps === undefined) return;
 
-  clickWraps.forEach((wrap) => {
+  // functionality function that handles all of the event listeners and logic
+  //is triggered below either on each wrap element or within the document itself if no wrap is found
+  const clickActiveList = function (rootElement) {
     //get all the triggers
-    const triggers = Array.from(wrap.querySelectorAll(TRIGGER));
+    const triggers = Array.from(rootElement.querySelectorAll(TRIGGER));
 
-    // set up conditions for the function
-    let activeClass = attr(ACTIVE_CLASS, wrap.getAttribute(OPTION_ACTIVE_CLASS));
-    let firstOpen = attr(false, wrap.getAttribute(OPTION_FIRST_ACTIVE));
-    let oneActive = attr(false, wrap.getAttribute(OPTION_ONE_ACTIVE));
-    let keepOneActive = attr(false, wrap.getAttribute(OPTION_KEEP_ONE_ACTIVE));
+    //set default options
+    let activeClass = ACTIVE_CLASS;
+    let firstOpen = false;
+    let oneActive = false;
+    let keepOneActive = false;
+    //conditional options to check if the root element is a wrap
+    if (rootElement !== document) {
+      // set up conditions for the function
+      activeClass = attr(ACTIVE_CLASS, rootElement.getAttribute(OPTION_ACTIVE_CLASS));
+      firstOpen = attr(false, rootElement.getAttribute(OPTION_FIRST_ACTIVE));
+      oneActive = attr(false, rootElement.getAttribute(OPTION_ONE_ACTIVE));
+      keepOneActive = attr(false, rootElement.getAttribute(OPTION_KEEP_ONE_ACTIVE));
 
-    //check breakpoints and quit function if set on specific breakpoints
-    let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
-    if (runOnBreakpoint === false) return;
+      //check breakpoints and quit function if set on specific breakpoints
+      let runOnBreakpoint = checkBreakpoints(rootElement, ANIMATION_ID, gsapContext);
+      if (runOnBreakpoint === false) return;
+    } else {
+    }
 
     //utility function to activate items
     const activateItems = function (item, makeActive = true) {
@@ -42,7 +50,7 @@ export const clickActive = function (gsapContext) {
       //get the id and find the target element that has the same id.
       let hasTarget = true;
       const itemID = item.getAttribute(ID);
-      const targetEl = wrap.querySelector(`${TARGET}[${ID}="${itemID}"]`);
+      const targetEl = rootElement.querySelector(`${TARGET}[${ID}="${itemID}"]`);
       //if target or id isn't found set hasTarget to false
       if (!itemID || !targetEl) {
         hasTarget = false;
@@ -130,5 +138,17 @@ export const clickActive = function (gsapContext) {
     if (firstOpen) {
       activateItems(firstItem);
     }
-  });
+  };
+
+  //get wrap elements
+  const clickWraps = gsap.utils.toArray(WRAP);
+  //if no wrap elements are found run functionality on document
+  if (clickWraps.length === 0 || clickWraps === undefined) {
+    clickActiveList(document);
+  } else {
+    //otherwise run funcitonality on each wrap
+    clickWraps.forEach((wrap) => {
+      clickActiveList(wrap);
+    });
+  }
 };
