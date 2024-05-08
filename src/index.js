@@ -1,5 +1,6 @@
 import { attr } from './utilities';
 import { hoverActive } from './interactions/hoverActive';
+import { clickActive } from './interactions/clickActive';
 import { scrollIn } from './interactions/scrollIn';
 import { scrolling } from './interactions/scrolling';
 
@@ -109,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //global interactions
         hoverActive(gsapContext);
+        clickActive(gsapContext);
         //custom interactions
         workHeroSlider();
         //conditional interactions
