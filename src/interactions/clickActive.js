@@ -142,11 +142,11 @@ export const clickActive = function (gsapContext) {
 
   //get wrap elements
   const clickWraps = gsap.utils.toArray(WRAP);
-  //if no wrap elements are found run functionality on document
+  //if no wrap elements are found run functionality on document element
   if (clickWraps.length === 0 || clickWraps === undefined) {
     clickActiveList(document);
   } else {
-    //otherwise run funcitonality on each wrap
+    //otherwise run funcitonality on each wrap element
     clickWraps.forEach((wrap) => {
       clickActiveList(wrap);
     });
