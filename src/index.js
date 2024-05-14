@@ -3,6 +3,8 @@ import { hoverActive } from './interactions/hoverActive';
 import { clickActive } from './interactions/clickActive';
 import { scrollIn } from './interactions/scrollIn';
 import { scrolling } from './interactions/scrolling';
+import Swiper from 'swiper';
+import { Navigation, Thumbs, Controller, Pagination, EffectFade } from 'swiper/modules';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Comment out for production
@@ -25,13 +27,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const WRAP = '[data-ix-workslider="wrap"]';
     const SWIPER_BG = '[data-ix-workslider="swiper-bg"]';
     const SWIPER_THUMBS = '[data-ix-workslider="swiper-thumbs"]';
-    const SWIPER_TEXT = '[data-ix-workslider="swiper-text"]';
+    const SWIPER_TITLES = '[data-ix-workslider="swiper-titles"]';
     const SLIDE_THUMBS = '[data-ix-workslider="thumbs-slide"]';
-    const CURRENT_SLIDE = '[data-ix-workslider="current-slide"]';
-    const TOTAL_SLIDE = '[data-ix-workslider="total-slides"]';
+    const CURRENT_SLIDE_TEXT = '[data-ix-workslider="current-slide"]';
+    const TOTAL_SLIDE_TEXT = '[data-ix-workslider="total-slides"]';
+    //global selectors
+    const NEXT_BUTTON = '.swiper-next';
+    const PREVIOUS_BUTTON = '.swiper-prev';
+
     //options
     //classes
     const ACTIVE_CLASS = 'is-active';
+    const DISABLED_CLASS = 'is-disabled';
 
     //utility function to add 0 to number
     function numberWithZero(num) {
@@ -47,49 +54,77 @@ document.addEventListener('DOMContentLoaded', function () {
       //get the total slides
       let totalSlides = numberWithZero(sliderComponent.querySelectorAll(SLIDE_THUMBS).length);
       //set the total slides into the total text content
-      sliderComponent.querySelector(TOTAL_SLIDE).textContent = totalSlides;
+      sliderComponent.querySelector(TOTAL_SLIDE_TEXT).textContent = totalSlides;
 
       const bgSwiper = new Swiper(sliderComponent.querySelector(SWIPER_BG), {
+        modules: [Controller, EffectFade],
         slidesPerView: 1,
         speed: 400,
+        loop: true,
         effect: 'fade',
+        EffectFade: {
+          crossFade: true,
+        },
         allowTouchMove: false,
+        on: {
+          slideChange: function () {
+            // console.log('bg swiper:', this.activeIndex);
+          },
+        },
       });
 
       const thumbsSwiper = new Swiper(sliderComponent.querySelector(SWIPER_THUMBS), {
+        modules: [Controller],
         slidesPerView: 1,
+        centeredSlides: false,
         speed: 600,
         loop: true,
-        loopedSlides: 8,
         slideToClickedSlide: true,
+        allowTouchMove: false,
+        on: {
+          slideChange: function () {
+            // console.log('thumbs swiper:', this.activeIndex);
+          },
+        },
       });
 
-      const textSwiper = new Swiper(sliderComponent.querySelector(SWIPER_TEXT), {
+      const textSwiper = new Swiper(sliderComponent.querySelector(SWIPER_TITLES), {
+        modules: [Navigation, Thumbs, Controller],
         slidesPerView: 'auto',
         speed: 600,
         loop: true,
-        loopedSlides: 8,
         slideToClickedSlide: true,
-        mousewheel: true,
-        keyboard: true,
+        mousewheel: false,
+        keyboard: false,
         centeredSlides: true,
         slideActiveClass: ACTIVE_CLASS,
         slideDuplicateActiveClass: ACTIVE_CLASS,
         thumbs: {
-          swiper: bgSwiper,
+          swiper: thumbsSwiper,
+          slideThumbActiveClass: ACTIVE_CLASS,
+        },
+        Controller: {
+          control: bgSwiper,
+          by: 'slide',
         },
         navigation: {
-          nextEl: sliderComponent.querySelector('.swiper-next'),
-          prevEl: sliderComponent.querySelector('.swiper-prev'),
+          nextEl: sliderComponent.querySelector(NEXT_BUTTON),
+          prevEl: sliderComponent.querySelector(PREVIOUS_BUTTON),
+          disabledClass: DISABLED_CLASS,
+        },
+        on: {
+          slideChange: function () {
+            // console.log('title swiper:', this.activeIndex);
+          },
         },
       });
 
-      textSwiper.controller.control = thumbsSwiper;
-      thumbsSwiper.controller.control = textSwiper;
+      // textSwiper.controller.control = bgSwiper;
+      thumbsSwiper.controller.control = bgSwiper;
 
       textSwiper.on('slideChange', function (e) {
         let slideNumber = numberWithZero(e.realIndex + 1);
-        sliderComponent.querySelector(CURRENT_SLIDE).textContent = slideNumber;
+        sliderComponent.querySelector(CURRENT_SLIDE_TEXT).textContent = slideNumber;
       });
     });
   };
