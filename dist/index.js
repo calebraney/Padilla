@@ -6207,6 +6207,23 @@
       gsap.registerPlugin(Flip);
     }
     const resetScrollTriggers = document.querySelectorAll("[data-ix-reset]");
+    const navFadeScroll = function() {
+      const NAV = '[data-ix-navfade="true"]';
+      const HIDDEN_CLASS = "is-hidden";
+      const nav = document.querySelector(NAV);
+      if (!nav)
+        return;
+      let lastScrollTop = 0;
+      function scrollDirectionListener() {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScroll === 0) {
+          nav.classList.add(HIDDEN_CLASS);
+        } else {
+          nav.classList.remove(HIDDEN_CLASS);
+        }
+      }
+      window.addEventListener("scroll", scrollDirectionListener);
+    };
     const workHeroSlider = function() {
       const WRAP = '[data-ix-workslider="wrap"]';
       const SWIPER_BG = '[data-ix-workslider="swiper-bg"]';
@@ -6308,6 +6325,7 @@
           let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
           hoverActive(gsapContext);
           clickActive(gsapContext);
+          navFadeScroll();
           workHeroSlider();
           if (!reduceMotion) {
             scrolling(gsapContext);

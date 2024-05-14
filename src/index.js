@@ -22,6 +22,38 @@ document.addEventListener('DOMContentLoaded', function () {
   //Global Variables
   const resetScrollTriggers = document.querySelectorAll('[data-ix-reset]');
 
+  //////////////////////////////
+  //GSAP Animations
+
+  const navFadeScroll = function () {
+    //elements
+    const NAV = '[data-ix-navfade="true"]';
+    //classes
+    const HIDDEN_CLASS = 'is-hidden';
+
+    const nav = document.querySelector(NAV);
+    if (!nav) return;
+
+    //variable to check last scroll distance
+    let lastScrollTop = 0;
+
+    function scrollDirectionListener() {
+      //check the current scroll distance from the top
+      let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      //compare current scroll distance to last scroll distance
+      if (currentScroll === 0) {
+        //if use is at the top
+        nav.classList.add(HIDDEN_CLASS);
+      } else {
+        //user is not at the top
+        nav.classList.remove(HIDDEN_CLASS);
+      }
+    }
+    window.addEventListener('scroll', scrollDirectionListener);
+  };
+
+  //////////////////////////////
+  //Sliders
   const workHeroSlider = function () {
     //selectors
     const WRAP = '[data-ix-workslider="wrap"]';
@@ -147,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hoverActive(gsapContext);
         clickActive(gsapContext);
         //custom interactions
+        navFadeScroll();
         workHeroSlider();
         //conditional interactions
         if (!reduceMotion) {
