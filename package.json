@@ -23,6 +23,7 @@
     "serve": "^14.1.2"
   },
   "dependencies": {
+    "@splidejs/splide": "^4.1.4",
     "split-type": "^0.3.4",
     "swiper": "^11.1.1"
   }

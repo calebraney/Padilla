@@ -4,7 +4,8 @@ import { clickActive } from './interactions/clickActive';
 import { scrollIn } from './interactions/scrollIn';
 import { scrolling } from './interactions/scrolling';
 import Swiper from 'swiper';
-import { Navigation, Thumbs, Controller, Pagination, EffectFade } from 'swiper/modules';
+import { Navigation, Thumbs, Controller, Pagination, EffectFade, Autoplay } from 'swiper/modules';
+import Splide from '@splidejs/splide';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Comment out for production
@@ -54,6 +55,93 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //////////////////////////////
   //Sliders
+
+  const caseSlider = function () {
+    //Swiper selectors
+    const WRAP = '[data-ix-caseslider="wrap"]';
+    const SWIPER = '.case_slider_layout';
+    //Button selectors
+    const NEXT_BUTTON = '.splide__arrow--prev';
+    const PREVIOUS_BUTTON = '.splide__arrow--next';
+    //classes
+    const ACTIVE_CLASS = 'is-active';
+    const DISABLED_CLASS = 'is-disabled';
+
+    document.querySelectorAll(WRAP).forEach(function (wrap) {
+      if (!wrap) return;
+      const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
+      const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
+      const swiperEl = wrap.querySelector(SWIPER);
+      if (!nextButtonEl || !previousButtonEl || !swiperEl) return;
+
+      const splide = new Splide(swiperEl, {
+        type: 'loop', //slide or loop
+        speed: 800, // transition speed in miliseconds
+        dragAngleThreshold: 60, // default is 30
+        autoWidth: false, // for cards with differing widths
+        rewind: false, // go back to beginning when reach end
+        gap: '3.5%',
+        perPage: 3,
+        perMove: 1,
+        arrows: { prev: previousButtonEl, next: nextButtonEl },
+        classes: {
+          // Add classes for arrows.
+          prev: PREVIOUS_BUTTON,
+          next: NEXT_BUTTON,
+        },
+      });
+      splide.mount();
+    });
+  };
+
+  // const caseSlider = function () {
+  //   //Swiper selectors
+  //   const WRAP = '[data-ix-caseslider="wrap"]';
+  //   const SWIPER = '[data-ix-caseslider="swiper"]';
+  //   //Button selectors
+  //   const NEXT_BUTTON = '.swiper-next';
+  //   const PREVIOUS_BUTTON = '.swiper-prev';
+  //   //classes
+  //   const ACTIVE_CLASS = 'is-active';
+  //   const DISABLED_CLASS = 'is-disabled';
+
+  //   document.querySelectorAll(WRAP).forEach(function (wrap) {
+  //     if (!wrap) return;
+  //     const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
+  //     const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
+  //     const swiperEl = wrap.querySelector(SWIPER);
+  //     if (!nextButtonEl || !previousButtonEl || !swiperEl) return;
+
+  //     const swiper = new Swiper(swiperEl, {
+  //       modules: [Navigation, Autoplay],
+  //       slidesPerView: 1,
+  //       // slidesPerGroup: 1,
+  //       speed: 600,
+  //       // loop: false,
+  //       // updateOnMove: true, // affects timing
+  //       // allowTouchMove: true,
+  //       // followFinger: true,
+  //       // freeMode: false,
+  //       // spaceBetween: 32,
+  //       // slideActiveClass: ACTIVE_CLASS,
+  //       // slideDuplicateActiveClass: ACTIVE_CLASS,
+  //       navigation: {
+  //         nextEl: nextButtonEl,
+  //         prevEl: previousButtonEl,
+  //         lockClass: DISABLED_CLASS,
+  //       },
+  //       autoplay: {
+  //         delay: 3000,
+  //       },
+  //       on: {
+  //         init: function () {
+  //           console.log('swiper:', this);
+  //         },
+  //       },
+  //     });
+  //   });
+  // };
+
   const workHeroSlider = function () {
     //selectors
     const WRAP = '[data-ix-workslider="wrap"]';
@@ -66,8 +154,6 @@ document.addEventListener('DOMContentLoaded', function () {
     //global selectors
     const NEXT_BUTTON = '.swiper-next';
     const PREVIOUS_BUTTON = '.swiper-prev';
-
-    //options
     //classes
     const ACTIVE_CLASS = 'is-active';
     const DISABLED_CLASS = 'is-disabled';
@@ -181,6 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //custom interactions
         navFadeScroll();
         workHeroSlider();
+        caseSlider();
         //conditional interactions
         if (!reduceMotion) {
           scrolling(gsapContext);
