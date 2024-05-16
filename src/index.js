@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   //Sliders
 
-  const caseSlider = function () {
+  const caseSplide = function () {
     //Swiper selectors
     const WRAP = '[data-ix-caseslider="wrap"]';
     const SWIPER = '.case_slider_layout';
@@ -267,7 +267,8 @@ document.addEventListener('DOMContentLoaded', function () {
         //custom interactions
         navFadeScroll();
         workHeroSlider();
-        caseSlider();
+        caseSplide();
+        // caseSlider()
         //conditional interactions
         if (!reduceMotion) {
           scrolling(gsapContext);

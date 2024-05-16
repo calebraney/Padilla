@@ -8796,7 +8796,7 @@
       }
       window.addEventListener("scroll", scrollDirectionListener);
     };
-    const caseSlider = function() {
+    const caseSplide = function() {
       const WRAP = '[data-ix-caseslider="wrap"]';
       const SWIPER = ".case_slider_layout";
       const NEXT_BUTTON = ".splide__arrow--prev";
@@ -8932,7 +8932,7 @@
           clickActive(gsapContext);
           navFadeScroll();
           workHeroSlider();
-          caseSlider();
+          caseSplide();
           if (!reduceMotion) {
             scrolling(gsapContext);
             scrollIn(gsapContext);
