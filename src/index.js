@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //////////////////////////////
   //Global Variables
-  const resetScrollTriggers = document.querySelectorAll('[data-ix-reset]');
 
   //////////////////////////////
   //GSAP Animations
@@ -280,9 +279,26 @@ document.addEventListener('DOMContentLoaded', function () {
   gsapInit();
 
   //reset gsap on click of reset triggers
-  resetScrollTriggers.forEach(function (item) {
-    item.addEventListener('click', function (e) {
-      ScrollTrigger.refresh();
+  const scrollReset = function () {
+    //selector
+    const RESET_EL = '[data-ix-reset]';
+    //time option
+    const RESET_TIME = 'data-ix-reset-time';
+    const resetScrollTriggers = document.querySelectorAll(RESET_EL);
+    resetScrollTriggers.forEach(function (item) {
+      item.addEventListener('click', function (e) {
+        //reset scrolltrigger
+        ScrollTrigger.refresh();
+        //if item has reset timer reset scrolltriggers after timer as well.
+        if (item.hasAttribute(RESET_TIME)) {
+          let time = attr(1000, item.getAttribute(RESET_TIME));
+          //get potential timer reset
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+          }, time);
+        }
+      });
     });
-  });
+  };
+  scrollReset();
 });
