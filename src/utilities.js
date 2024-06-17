@@ -11,6 +11,16 @@ export const attr = function (defaultVal, attrVal) {
   return defaultVal;
 };
 
+export const setDefaultAttr = function (defaultVal, item, attrVal) {
+  const itemValue = item.getAttribute(attrVal);
+  //check if item has a specific attribute
+  if (itemValue === null) {
+    return defaultVal;
+  } else {
+    return itemValue;
+  }
+};
+
 //split text utility
 export const runSplit = function (text, types = 'lines, words') {
   if (!text) return;

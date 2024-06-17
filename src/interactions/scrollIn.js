@@ -60,7 +60,7 @@ export const scrollIn = function (gsapContext) {
     };
     const varsTo = {
       opacity: 1,
-      x: '0rem',
+      y: '0rem',
     };
     //optional adjustments to the tween
     // {stagger: large}
@@ -73,13 +73,17 @@ export const scrollIn = function (gsapContext) {
   };
 
   const scrollInHeading = function (item) {
+    //check if item is rich text
+    if (item.classList.contains('w-richtext')) {
+      item = item.firstChild;
+    }
     //split the text
     const splitText = runSplit(item);
     if (!splitText) return;
     //set heading to full opacity (check to see if needed)
     // item.style.opacity = 1;
     const tl = scrollInTL(item);
-    const tween = defaultTween(splitText.words, tl, { stagger: true, skew: 'large' });
+    const tween = defaultTween(splitText.words, tl, { stagger: true });
     //add event calleback to revert text on completion
     tl.eventCallback('onComplete', () => {
       splitText.revert();
@@ -88,6 +92,10 @@ export const scrollIn = function (gsapContext) {
 
   const scrollInItem = function (item) {
     if (!item) return;
+    //check if item is rich text
+    if (item.classList.contains('w-richtext')) {
+      item = item.firstChild;
+    }
     const tl = scrollInTL(item);
     const tween = defaultTween(item, tl);
   };

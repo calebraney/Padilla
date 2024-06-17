@@ -969,7 +969,7 @@
       };
       const varsTo = {
         opacity: 1,
-        x: "0rem"
+        y: "0rem"
       };
       if (options.stagger === true) {
         varsTo.stagger = { each: 0.1, from: "start" };
@@ -978,11 +978,14 @@
       return tween;
     };
     const scrollInHeading = function(item) {
+      if (item.classList.contains("w-richtext")) {
+        item = item.firstChild;
+      }
       const splitText = runSplit(item);
       if (!splitText)
         return;
       const tl = scrollInTL(item);
-      const tween = defaultTween(splitText.words, tl, { stagger: true, skew: "large" });
+      const tween = defaultTween(splitText.words, tl, { stagger: true });
       tl.eventCallback("onComplete", () => {
         splitText.revert();
       });
@@ -990,6 +993,9 @@
     const scrollInItem = function(item) {
       if (!item)
         return;
+      if (item.classList.contains("w-richtext")) {
+        item = item.firstChild;
+      }
       const tl = scrollInTL(item);
       const tween = defaultTween(item, tl);
     };
@@ -1342,6 +1348,84 @@
         });
       });
     });
+  };
+
+  // src/interactions/load.js
+  var load = function(gsapContext) {
+    const ANIMATION_ID = "load";
+    const ATTRIBUTE = "data-ix-load";
+    const HEADING = "heading";
+    const ITEM = "item";
+    const IMAGE = "image";
+    const STAGGER = "stagger";
+    const POSITION = "data-ix-load-position";
+    const DEFAULT_STAGGER = "<0.2";
+    const items = gsap.utils.toArray(`[${ATTRIBUTE}]`);
+    if (items.length === 0)
+      return;
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: {
+        ease: "power1.out",
+        duration: 0.8
+      }
+    });
+    const loadHeading = function(item) {
+      const splitText = runSplit(item);
+      if (!splitText)
+        return;
+      const position = attr("<", item.getAttribute(POSITION));
+      tl.set(item, { opacity: 1 });
+      tl.fromTo(
+        splitText.words,
+        { opacity: 0, y: "50%", rotateX: 45 },
+        { opacity: 1, y: "0%", rotateX: 0, stagger: { each: 0.1, from: "left" } },
+        position
+      );
+    };
+    const loadImage = function(item) {
+      const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION));
+      tl.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
+    };
+    const loadItem = function(item) {
+      const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION));
+      tl.fromTo(item, { opacity: 0, y: "2rem" }, { opacity: 1, y: "0rem" }, position);
+    };
+    const loadStagger = function(item) {
+      if (!item)
+        return;
+      const children2 = gsap.utils.toArray(item.children);
+      if (children2.length === 0)
+        return;
+      children2.forEach((child2, index) => {
+        if (index === 0) {
+          item.style.opacity = 1;
+        }
+        loadItem(child2);
+      });
+    };
+    items.forEach((item) => {
+      if (!item)
+        return;
+      let runOnBreakpoint = checkBreakpoints(item, ANIMATION_ID, gsapContext);
+      if (runOnBreakpoint === false)
+        return;
+      const loadType = item.getAttribute(ATTRIBUTE);
+      if (loadType === HEADING) {
+        loadHeading(item);
+      }
+      if (loadType === IMAGE) {
+        loadImage(item);
+      }
+      if (loadType === ITEM) {
+        loadItem(item);
+      }
+      if (loadType === STAGGER) {
+        loadStagger(item);
+      }
+    });
+    tl.play(0);
+    return tl;
   };
 
   // node_modules/swiper/shared/ssr-window.esm.mjs
@@ -8308,11 +8392,11 @@
     function check() {
       entries2 = entries2.filter(function(data) {
         var distance = options.perPage * ((options.preloadPages || 1) + 1) - 1;
-        return data[1].isWithin(Splide2.index, distance) ? load(data) : true;
+        return data[1].isWithin(Splide2.index, distance) ? load2(data) : true;
       });
       entries2.length || off(events2);
     }
-    function load(data) {
+    function load2(data) {
       var img = data[0];
       addClass(data[1].slide, CLASS_LOADING);
       bind(img, "load error", apply(onLoad2, data));
@@ -8333,7 +8417,7 @@
       isSequential && loadNext();
     }
     function loadNext() {
-      entries2.length && load(entries2.shift());
+      entries2.length && load2(entries2.shift());
     }
     return {
       mount,
@@ -9033,6 +9117,7 @@
           hoverActive(gsapContext);
           clickActive(gsapContext);
           horizontal(gsapContext);
+          load(gsapContext);
           navFadeScroll();
           workHeroSlider();
           caseSplide();
