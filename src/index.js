@@ -3,6 +3,7 @@ import { hoverActive } from './interactions/hoverActive';
 import { clickActive } from './interactions/clickActive';
 import { scrollIn } from './interactions/scrollIn';
 import { scrolling } from './interactions/scrolling';
+import { horizontal } from './interactions/horizontal';
 import Swiper from 'swiper';
 import { Navigation, Thumbs, Controller, Pagination, EffectFade, Autoplay } from 'swiper/modules';
 import Splide from '@splidejs/splide';
@@ -263,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //global interactions
         hoverActive(gsapContext);
         clickActive(gsapContext);
+        horizontal(gsapContext);
         //custom interactions
         navFadeScroll();
         workHeroSlider();
