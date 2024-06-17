@@ -1,14 +1,22 @@
 import SplitType from 'split-type';
 
 // attribute value checker
-export const attr = function (defaultVal, attrVal) {
+export const attr = function (defaultVal, attrVal, convertToDefault = true) {
   const defaultValType = typeof defaultVal;
   if (typeof attrVal !== 'string' || attrVal.trim() === '') return defaultVal;
-  if (attrVal === 'true' && defaultValType === 'boolean') return true;
-  if (attrVal === 'false' && defaultValType === 'boolean') return false;
-  if (isNaN(attrVal) && defaultValType === 'string') return attrVal;
-  if (!isNaN(attrVal) && defaultValType === 'number') return +attrVal;
-  return defaultVal;
+  //if convertToDefault is true, convert the attribute type to the default type
+  if (convertToDefault) {
+    if (attrVal === 'true' && defaultValType === 'boolean') return true;
+    if (attrVal === 'false' && defaultValType === 'boolean') return false;
+    if (isNaN(attrVal) && defaultValType === 'string') return attrVal;
+    if (!isNaN(attrVal) && defaultValType === 'number') return +attrVal;
+    return defaultVal;
+  } else {
+    if (attrVal === 'true') return true;
+    if (attrVal === 'false') return false;
+    if (!isNaN(attrVal)) return +attrVal;
+    return attrVal;
+  }
 };
 
 export const setDefaultAttr = function (defaultVal, item, attrVal) {

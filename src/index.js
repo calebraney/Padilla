@@ -263,10 +263,10 @@ document.addEventListener('DOMContentLoaded', function () {
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //global interactions
+        load(gsapContext);
         hoverActive(gsapContext);
         clickActive(gsapContext);
         horizontal(gsapContext);
-        load(gsapContext);
 
         //custom interactions
         navFadeScroll();

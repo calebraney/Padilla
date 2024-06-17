@@ -21,7 +21,8 @@ export const load = function (gsapContext) {
   const STAGGER = 'stagger';
   //tween options
   const POSITION = 'data-ix-load-position'; // sequential by default, use "<" to start tweens together
-  const DEFAULT_STAGGER = '<0.2';
+  const STAGGER_CHANGE = 'data-ix-load-stagger'; // sequential by default, use "<" to start tweens together
+  let DEFAULT_STAGGER = '<0.2';
 
   //get itema
   const items = gsap.utils.toArray(`[${ATTRIBUTE}]`);
@@ -31,10 +32,20 @@ export const load = function (gsapContext) {
     paused: true,
     defaults: {
       ease: 'power1.out',
-      duration: 0.8,
+      duration: 0.6,
     },
   });
   //anything that needs to be set to start the interaction happens here
+
+  //set optional stagger amount
+  const staggerDOM = document.querySelector(`[${STAGGER_CHANGE}]`);
+  if (staggerDOM) {
+    // option to change stagger amount
+    const changeStagger = attr('false', staggerDOM.getAttribute(STAGGER_CHANGE));
+    if (changeStagger !== 'false') {
+      DEFAULT_STAGGER = changeStagger;
+    }
+  }
 
   //h1 load tween
   const loadHeading = function (item) {
@@ -42,7 +53,8 @@ export const load = function (gsapContext) {
     const splitText = runSplit(item);
     if (!splitText) return;
     // get the position attribute
-    const position = attr('<', item.getAttribute(POSITION));
+    const position = attr('<', item.getAttribute(POSITION), false);
+    //set opacity to 1
     tl.set(item, { opacity: 1 });
     tl.fromTo(
       splitText.words,
@@ -54,13 +66,13 @@ export const load = function (gsapContext) {
   //images load tween
   const loadImage = function (item) {
     // get the position attribute or set defautl position
-    const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION));
+    const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
     tl.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
   };
   //default load tween
   const loadItem = function (item) {
     // get the position attribute
-    const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION));
+    const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
     tl.fromTo(item, { opacity: 0, y: '2rem' }, { opacity: 1, y: '0rem' }, position);
   };
 

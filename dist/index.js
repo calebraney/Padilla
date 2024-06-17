@@ -740,19 +740,29 @@
   }();
 
   // src/utilities.js
-  var attr = function(defaultVal, attrVal) {
+  var attr = function(defaultVal, attrVal, convertToDefault = true) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "")
       return defaultVal;
-    if (attrVal === "true" && defaultValType === "boolean")
-      return true;
-    if (attrVal === "false" && defaultValType === "boolean")
-      return false;
-    if (isNaN(attrVal) && defaultValType === "string")
+    if (convertToDefault) {
+      if (attrVal === "true" && defaultValType === "boolean")
+        return true;
+      if (attrVal === "false" && defaultValType === "boolean")
+        return false;
+      if (isNaN(attrVal) && defaultValType === "string")
+        return attrVal;
+      if (!isNaN(attrVal) && defaultValType === "number")
+        return +attrVal;
+      return defaultVal;
+    } else {
+      if (attrVal === "true")
+        return true;
+      if (attrVal === "false")
+        return false;
+      if (!isNaN(attrVal))
+        return +attrVal;
       return attrVal;
-    if (!isNaN(attrVal) && defaultValType === "number")
-      return +attrVal;
-    return defaultVal;
+    }
   };
   var runSplit = function(text, types = "lines, words") {
     if (!text)
@@ -1359,7 +1369,8 @@
     const IMAGE = "image";
     const STAGGER = "stagger";
     const POSITION = "data-ix-load-position";
-    const DEFAULT_STAGGER = "<0.2";
+    const STAGGER_CHANGE = "data-ix-load-stagger";
+    let DEFAULT_STAGGER = "<0.2";
     const items = gsap.utils.toArray(`[${ATTRIBUTE}]`);
     if (items.length === 0)
       return;
@@ -1367,14 +1378,21 @@
       paused: true,
       defaults: {
         ease: "power1.out",
-        duration: 0.8
+        duration: 0.6
       }
     });
+    const staggerDOM = document.querySelector(`[${STAGGER_CHANGE}]`);
+    if (staggerDOM) {
+      const changeStagger = attr("false", staggerDOM.getAttribute(STAGGER_CHANGE));
+      if (changeStagger !== "false") {
+        DEFAULT_STAGGER = changeStagger;
+      }
+    }
     const loadHeading = function(item) {
       const splitText = runSplit(item);
       if (!splitText)
         return;
-      const position = attr("<", item.getAttribute(POSITION));
+      const position = attr("<", item.getAttribute(POSITION), false);
       tl.set(item, { opacity: 1 });
       tl.fromTo(
         splitText.words,
@@ -1384,11 +1402,11 @@
       );
     };
     const loadImage = function(item) {
-      const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION));
+      const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
       tl.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
     };
     const loadItem = function(item) {
-      const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION));
+      const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
       tl.fromTo(item, { opacity: 0, y: "2rem" }, { opacity: 1, y: "0rem" }, position);
     };
     const loadStagger = function(item) {
@@ -9114,10 +9132,10 @@
         },
         (gsapContext) => {
           let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
+          load(gsapContext);
           hoverActive(gsapContext);
           clickActive(gsapContext);
           horizontal(gsapContext);
-          load(gsapContext);
           navFadeScroll();
           workHeroSlider();
           caseSplide();
