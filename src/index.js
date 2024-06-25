@@ -54,6 +54,73 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', scrollDirectionListener);
   };
 
+  const ctaSlider = function (isMobile) {
+    //Selectors
+    const SLIDE_FIRST_LIST = '[data-ix-cta="list"]';
+    const SLIDES = '[data-ix-cta="slide"]';
+    const PRIMARY_SLIDES = '[data-ix-cta-first="true"]';
+
+    //elements
+    const slideList = document.querySelector(SLIDE_FIRST_LIST);
+    //only one list is primary in order to count how many items there are, but the rest are combined using fs attributes
+    const primarySlides = gsap.utils.toArray(PRIMARY_SLIDES);
+    const allSlides = gsap.utils.toArray(SLIDES);
+    const START_OPACITY = 0.3;
+    const ACTIVE_OPACITY = 1;
+    if (!slideList || !primarySlides.length === 0) return;
+    let distance = 0;
+    let currentSlide;
+    if (isMobile) {
+      currentSlide = 1;
+    } else {
+      currentSlide = 3;
+    }
+    let tl = gsap.timeline({
+      repeat: -1,
+      onRepeat: () => {
+        currentSlide = 3;
+        if (isMobile) {
+          currentSlide = 1;
+        }
+      },
+      defaults: {
+        ease: 'power2.out',
+        duration: 1,
+      },
+    });
+    //set starting slides to correct opacity
+    tl.set(allSlides, { opacity: START_OPACITY });
+    tl.set(allSlides[currentSlide], { opacity: ACTIVE_OPACITY });
+    //loop through each slide and add tweens
+    primarySlides.forEach((item, index) => {
+      let elHeight = item.offsetHeight;
+      distance = distance - elHeight;
+      // let distance = (index + 1) * -elHeight;
+      // console.log(index, elHeight, distance);
+      tl.to(slideList, {
+        y: distance,
+        delay: 1,
+      });
+      tl.to(
+        allSlides[currentSlide],
+        {
+          opacity: START_OPACITY,
+          duration: 0.5,
+        },
+        '<'
+      );
+      tl.to(
+        allSlides[currentSlide + 1],
+        {
+          opacity: ACTIVE_OPACITY,
+          duration: 0.5,
+        },
+        '<'
+      );
+      currentSlide++;
+    });
+  };
+
   //////////////////////////////
   //Sliders
 
@@ -272,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
         navFadeScroll();
         workHeroSlider();
         caseSplide();
+        ctaSlider(isMobile);
         // caseSlider()
         //conditional interactions
         if (!reduceMotion) {

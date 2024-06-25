@@ -9004,6 +9004,65 @@
       }
       window.addEventListener("scroll", scrollDirectionListener);
     };
+    const ctaSlider = function(isMobile) {
+      const SLIDE_FIRST_LIST = '[data-ix-cta="list"]';
+      const SLIDES = '[data-ix-cta="slide"]';
+      const PRIMARY_SLIDES = '[data-ix-cta-first="true"]';
+      const slideList = document.querySelector(SLIDE_FIRST_LIST);
+      const primarySlides = gsap.utils.toArray(PRIMARY_SLIDES);
+      const allSlides = gsap.utils.toArray(SLIDES);
+      const START_OPACITY = 0.3;
+      const ACTIVE_OPACITY = 1;
+      if (!slideList || !primarySlides.length === 0)
+        return;
+      let distance = 0;
+      let currentSlide;
+      if (isMobile) {
+        currentSlide = 1;
+      } else {
+        currentSlide = 3;
+      }
+      let tl = gsap.timeline({
+        repeat: -1,
+        onRepeat: () => {
+          currentSlide = 3;
+          if (isMobile) {
+            currentSlide = 1;
+          }
+        },
+        defaults: {
+          ease: "power2.out",
+          duration: 1
+        }
+      });
+      tl.set(allSlides, { opacity: START_OPACITY });
+      tl.set(allSlides[currentSlide], { opacity: ACTIVE_OPACITY });
+      primarySlides.forEach((item, index) => {
+        let elHeight = item.offsetHeight;
+        distance = distance - elHeight;
+        tl.to(slideList, {
+          y: distance,
+          delay: 1
+        });
+        tl.to(
+          allSlides[currentSlide],
+          {
+            opacity: START_OPACITY,
+            duration: 0.5
+          },
+          "<"
+        );
+        tl.to(
+          allSlides[currentSlide + 1],
+          {
+            opacity: ACTIVE_OPACITY,
+            duration: 0.5
+          },
+          "<"
+        );
+        currentSlide++;
+      });
+    };
     const caseSplide = function() {
       const WRAP = '[data-ix-caseslider="wrap"]';
       const SWIPER = ".case_slider_layout";
@@ -9143,6 +9202,7 @@
           navFadeScroll();
           workHeroSlider();
           caseSplide();
+          ctaSlider(isMobile);
           if (!reduceMotion) {
             scrolling(gsapContext);
             scrollIn(gsapContext);
