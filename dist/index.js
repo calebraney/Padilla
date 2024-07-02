@@ -1271,13 +1271,14 @@
     const BG_ITEM = '[data-ix-horizontal="bg-item"]';
     const OPTION_MATCH_HEIGHT = "data-ix-horizontal-start";
     const ITEM_THEME = "data-ix-horizontal-theme";
+    const ITEM_ID = "data-ix-horizontal-id";
     const ACTIVE_CLASS = "is-active";
     const sections = document.querySelectorAll(WRAP_SELECTOR);
     sections.forEach((section) => {
       let wrap = section;
       let inner = wrap.querySelector(INNER_SELECTOR);
       let track = wrap.querySelector(TRACK_SELECTOR);
-      let items = gsap.utils.toArray(wrap.querySelectorAll(ITEM));
+      let items = gsap.utils.toArray(document.querySelectorAll(ITEM));
       let bgItems = gsap.utils.toArray(document.querySelectorAll(BG_ITEM));
       if (!wrap || !inner || !track)
         return;
@@ -1316,49 +1317,40 @@
           bgItem.classList.remove(ACTIVE_CLASS);
         }
       });
+      items.forEach((item, index) => {
+        if (index === 0) {
+          item.classList.add(ACTIVE_CLASS);
+        } else {
+          item.classList.remove(ACTIVE_CLASS);
+        }
+      });
+      const activateSlide = function(ID) {
+        bgItems.forEach((bgItem, index) => {
+          const itemID = bgItem.getAttribute(ITEM_ID);
+          if (itemID === ID) {
+            console.log(itemID);
+            bgItem.classList.add(ACTIVE_CLASS);
+          } else {
+            bgItem.classList.remove(ACTIVE_CLASS);
+          }
+        });
+        items.forEach((item, index) => {
+          const itemID = item.getAttribute(ITEM_ID);
+          const itemTheme = attr("light", item.getAttribute(ITEM_THEME));
+          if (itemID === ID) {
+            item.classList.add(ACTIVE_CLASS);
+            wrap.setAttribute("data-theme", itemTheme);
+          } else {
+            item.classList.remove(ACTIVE_CLASS);
+          }
+        });
+      };
       items.forEach((currentItem, index) => {
         if (!currentItem)
           return;
-        let bgItem = bgItems[index];
-        const itemTheme = attr("light", currentItem.getAttribute(ITEM_THEME));
-        let itemtl = gsap.timeline({
-          scrollTrigger: {
-            trigger: currentItem,
-            containerAnimation: tl,
-            start: "left " + containerLeft(),
-            end: "right " + containerLeft(),
-            scrub: true,
-            onEnter: () => {
-              if (index === 0) {
-                items.forEach((item) => {
-                  item.classList.remove(ACTIVE_CLASS);
-                });
-              }
-              currentItem.classList.add(ACTIVE_CLASS);
-              bgItem.classList.add(ACTIVE_CLASS);
-              wrap.setAttribute("data-theme", itemTheme);
-            },
-            onLeave: () => {
-              if (index !== items.length + -1) {
-                currentItem.classList.remove(ACTIVE_CLASS);
-                bgItem.classList.remove(ACTIVE_CLASS);
-                wrap.setAttribute("data-theme", itemTheme);
-              }
-            },
-            onEnterBack: () => {
-              currentItem.classList.add(ACTIVE_CLASS);
-              bgItem.classList.add(ACTIVE_CLASS);
-              wrap.setAttribute("data-theme", itemTheme);
-            },
-            onLeaveBack: () => {
-              if (index !== 0) {
-                currentItem.classList.remove(ACTIVE_CLASS);
-                bgItem.classList.remove(ACTIVE_CLASS);
-                wrap.setAttribute("data-theme", itemTheme);
-              }
-            }
-          },
-          defaults: { ease: "none" }
+        const ID = currentItem.getAttribute(ITEM_ID);
+        currentItem.addEventListener("mouseenter", function(e) {
+          activateSlide(ID);
         });
       });
     });
@@ -9036,7 +9028,7 @@
           start: "top top",
           end: "bottom bottom",
           scrub: true,
-          markers: true
+          markers: false
         },
         defaults: {
           ease: "power1.out",
@@ -9045,24 +9037,19 @@
       });
       headingTL.set(headingWrap, {
         height: "500vh",
-        pointerEvents: "none",
         marginBottom: `-${workHeight / 1.5}px`
       });
       headingTL.set(clip, {
-        transformOrigin: "54.55% 84.5%"
+        transformOrigin: "54.68% 85.1%"
       });
       ScrollTrigger.refresh();
       headingTL.fromTo(
         clip,
         {
-          scale: 1,
-          y: "0vh",
-          x: "0vh"
+          scale: 1
         },
         {
           scale: 135,
-          y: "0vh",
-          x: "0vh",
           ease: "power1.inOut"
         }
       );
@@ -9111,6 +9098,17 @@
           duration: 0.2
         },
         "<.8"
+      );
+      headingTL.fromTo(
+        headingWrap,
+        {
+          filter: "blur(0px)"
+        },
+        {
+          filter: "blur(8px)",
+          duration: 0.15
+        },
+        "<.05"
       );
     };
     const ctaSlider = function(isMobile) {

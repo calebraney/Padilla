@@ -12,6 +12,7 @@ export const horizontal = function (gsapContext) {
   //options
   const OPTION_MATCH_HEIGHT = 'data-ix-horizontal-start';
   const ITEM_THEME = 'data-ix-horizontal-theme';
+  const ITEM_ID = 'data-ix-horizontal-id';
   const ACTIVE_CLASS = 'is-active';
 
   //elements
@@ -21,7 +22,7 @@ export const horizontal = function (gsapContext) {
     let wrap = section;
     let inner = wrap.querySelector(INNER_SELECTOR);
     let track = wrap.querySelector(TRACK_SELECTOR);
-    let items = gsap.utils.toArray(wrap.querySelectorAll(ITEM));
+    let items = gsap.utils.toArray(document.querySelectorAll(ITEM));
     let bgItems = gsap.utils.toArray(document.querySelectorAll(BG_ITEM));
     if (!wrap || !inner || !track) return;
 
@@ -62,6 +63,7 @@ export const horizontal = function (gsapContext) {
       return inner.offsetLeft + inner.offsetWidth + 'px';
     }
 
+    //make the first item active
     bgItems.forEach((bgItem, index) => {
       if (index === 0) {
         bgItem.classList.add(ACTIVE_CLASS);
@@ -69,88 +71,43 @@ export const horizontal = function (gsapContext) {
         bgItem.classList.remove(ACTIVE_CLASS);
       }
     });
-    //activate each item based on scroll position
+    items.forEach((item, index) => {
+      if (index === 0) {
+        item.classList.add(ACTIVE_CLASS);
+      } else {
+        item.classList.remove(ACTIVE_CLASS);
+      }
+    });
+    //function to activate an item based on its ID
+    const activateSlide = function (ID) {
+      bgItems.forEach((bgItem, index) => {
+        const itemID = bgItem.getAttribute(ITEM_ID);
+        if (itemID === ID) {
+          console.log(itemID);
+          bgItem.classList.add(ACTIVE_CLASS);
+        } else {
+          bgItem.classList.remove(ACTIVE_CLASS);
+        }
+      });
+      items.forEach((item, index) => {
+        const itemID = item.getAttribute(ITEM_ID);
+        const itemTheme = attr('light', item.getAttribute(ITEM_THEME));
+        if (itemID === ID) {
+          item.classList.add(ACTIVE_CLASS);
+          wrap.setAttribute('data-theme', itemTheme);
+          // wrap.style.backgroundColor = 'red';
+        } else {
+          item.classList.remove(ACTIVE_CLASS);
+        }
+      });
+    };
+    //activate each item based on hover
     items.forEach((currentItem, index) => {
       if (!currentItem) return;
-      let bgItem = bgItems[index];
-      const itemTheme = attr('light', currentItem.getAttribute(ITEM_THEME));
-      let itemtl = gsap.timeline({
-        scrollTrigger: {
-          trigger: currentItem,
-          containerAnimation: tl,
-          // start when the left side of the element hits the left side of the container
-          start: 'left ' + containerLeft(),
-          end: 'right ' + containerLeft(),
-          scrub: true,
-          // markers: true,
-          onEnter: () => {
-            //on first item remove active class from all of them
-            if (index === 0) {
-              items.forEach((item) => {
-                item.classList.remove(ACTIVE_CLASS);
-              });
-            }
-            currentItem.classList.add(ACTIVE_CLASS);
-            bgItem.classList.add(ACTIVE_CLASS);
-            wrap.setAttribute('data-theme', itemTheme);
-          },
-          onLeave: () => {
-            //all except last item
-            if (index !== items.length + -1) {
-              currentItem.classList.remove(ACTIVE_CLASS);
-              bgItem.classList.remove(ACTIVE_CLASS);
-              wrap.setAttribute('data-theme', itemTheme);
-            }
-          },
-          onEnterBack: () => {
-            currentItem.classList.add(ACTIVE_CLASS);
-            bgItem.classList.add(ACTIVE_CLASS);
-            wrap.setAttribute('data-theme', itemTheme);
-          },
-          onLeaveBack: () => {
-            //all except first item
-            if (index !== 0) {
-              currentItem.classList.remove(ACTIVE_CLASS);
-              bgItem.classList.remove(ACTIVE_CLASS);
-              wrap.setAttribute('data-theme', itemTheme);
-            }
-          },
-        },
-        defaults: { ease: 'none' },
+      const ID = currentItem.getAttribute(ITEM_ID);
+      currentItem.addEventListener('mouseenter', function (e) {
+        activateSlide(ID);
       });
-      //   itemtl.to(wrap.querySelector('.scroll_horizontal_hero_title'), {
-      //     opacity: 0,
-      //     filter: 'blur(60px)',
-      //   });
     });
-    //DEMO INNER TIMELINES
-    //   let tl2 = gsap.timeline({
-    //     scrollTrigger: {
-    //       trigger: wrap.querySelector(".scroll_horizontal_hero_wrap"),
-    //       containerAnimation: tl,
-    //       // start when the left side of the element hits the left side of the container
-    //       start: "left " + containerLeft(),
-    //       end: "right " + containerLeft(),
-    //       scrub: true,
-    //       // markers: true,
-    //     },
-    //     defaults: { ease: "none" },
-    //   });
-    //   tl2.to(wrap.querySelector(".scroll_horizontal_hero_title"), { opacity: 0, filter: "blur(60px)" });
-
-    //   //
-    //   let tl3 = gsap.timeline({
-    //     scrollTrigger: {
-    //       trigger: wrap.querySelector(".scroll_horizontal_pin_wrap"),
-    //       containerAnimation: tl,
-    //       start: "left " + containerLeft(),
-    //       end: "right " + containerRight(),
-    //       scrub: true,
-    //       // markers: true,
-    //     },
-    //     defaults: { ease: "none" },
-    //   });
-    //   tl3.to(wrap.querySelector(".scroll_horizontal_pin_element"), { xPercent: 100 });
-    //   tl3.from(wrap.querySelector(".scroll_horizontal_img"), { scale: 0.5 }, "<");
   });
 };

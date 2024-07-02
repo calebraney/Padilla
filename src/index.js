@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         start: 'top top',
         end: 'bottom bottom',
         scrub: true,
-        markers: true,
+        markers: false,
       },
       defaults: {
         ease: 'power1.out',
@@ -99,24 +99,21 @@ document.addEventListener('DOMContentLoaded', function () {
     //set initial styles
     headingTL.set(headingWrap, {
       height: '500vh',
-      pointerEvents: 'none',
       marginBottom: `-${workHeight / 1.5}px`,
     });
+    //OG transform '54.56% 84.6%',
+    //Second Transform Origin: '54.68% 85.1%',
     headingTL.set(clip, {
-      transformOrigin: '54.55% 84.5%',
+      transformOrigin: '54.68% 85.1%',
     });
     ScrollTrigger.refresh();
     headingTL.fromTo(
       clip,
       {
         scale: 1,
-        y: '0vh',
-        x: '0vh',
       },
       {
         scale: 135,
-        y: '0vh',
-        x: '0vh',
         ease: 'power1.inOut',
       }
     );
@@ -165,6 +162,17 @@ document.addEventListener('DOMContentLoaded', function () {
         duration: 0.2,
       },
       '<.8'
+    );
+    headingTL.fromTo(
+      headingWrap,
+      {
+        filter: 'blur(0px)',
+      },
+      {
+        filter: 'blur(8px)',
+        duration: 0.15,
+      },
+      '<.05'
     );
   };
 
