@@ -54,6 +54,120 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', scrollDirectionListener);
   };
 
+  const homeHeroScroll = function (gsapContext) {
+    //elements
+    const WRAP = '[data-ix-homehero="wrap"]';
+    const HEADING_WRAP = '[data-ix-homehero="heading-wrap"]';
+    const BG_WRAP = '[data-ix-homehero="bg-wrap"]';
+    const WORK_WRAP = '[data-ix-homehero="work-wrap"]';
+    const TEXT = '[data-ix-homehero="text"]';
+    const CLIP = '[data-ix-homehero="clip"]';
+    const GRAPHIC = '[data-ix-homehero="graphic"]';
+    const DOT_LEFT = '[data-ix-homehero="dots-left"]';
+    const DOT_RIGHT = '[data-ix-homehero="dots-right"]';
+    const TEXTURE = '[data-ix-homehero="texture"]';
+
+    //elements
+    const wrap = document.querySelector(WRAP);
+    const headingWrap = document.querySelector(HEADING_WRAP);
+    const bgWrap = document.querySelector(BG_WRAP);
+    const workWrap = document.querySelector(WORK_WRAP);
+    const text = document.querySelector(TEXT);
+    const clip = document.querySelector(CLIP);
+    const graphic = document.querySelector(GRAPHIC);
+    const dotLeft = document.querySelector(DOT_LEFT);
+    const dotRight = document.querySelector(DOT_RIGHT);
+    const texture = document.querySelector(TEXTURE);
+    //check for elements
+    if (!wrap || !clip) return;
+    const clipSize = clip.getBoundingClientRect();
+    const workHeight = workWrap.getBoundingClientRect().height;
+    console.log(workHeight);
+    const headingTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: headingWrap,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true,
+        markers: true,
+      },
+      defaults: {
+        ease: 'power1.out',
+        duration: 1,
+      },
+    });
+    //set initial styles
+    headingTL.set(headingWrap, {
+      height: '500vh',
+      pointerEvents: 'none',
+      marginBottom: `-${workHeight / 1.5}px`,
+    });
+    headingTL.set(clip, {
+      transformOrigin: '54.55% 84.5%',
+    });
+    ScrollTrigger.refresh();
+    headingTL.fromTo(
+      clip,
+      {
+        scale: 1,
+        y: '0vh',
+        x: '0vh',
+      },
+      {
+        scale: 135,
+        y: '0vh',
+        x: '0vh',
+        ease: 'power1.inOut',
+      }
+    );
+    headingTL.to(
+      dotLeft,
+      {
+        yPercent: 100,
+        opacity: 0,
+        duration: 0.3,
+      },
+      '<'
+    );
+    headingTL.to(
+      dotRight,
+      {
+        xPercent: 75,
+        opacity: 0,
+        duration: 0.3,
+      },
+      '<'
+    );
+    headingTL.to(
+      graphic,
+      {
+        scale: 0.3,
+        opacity: 0,
+        duration: 0.3,
+      },
+      '<'
+    );
+    headingTL.to(
+      texture,
+      {
+        opacity: 0,
+        duration: 0.5,
+      },
+      '<'
+    );
+    headingTL.fromTo(
+      headingWrap,
+      {
+        opacity: 1,
+      },
+      {
+        opacity: 0,
+        duration: 0.2,
+      },
+      '<.8'
+    );
+  };
+
   const ctaSlider = function (isMobile) {
     //Selectors
     const SLIDE_FIRST_LIST = '[data-ix-cta="list"]';
@@ -340,6 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
         workHeroSlider();
         caseSplide();
         ctaSlider(isMobile);
+        homeHeroScroll(gsapContext);
         // caseSlider()
         //conditional interactions
         if (!reduceMotion) {

@@ -785,7 +785,7 @@
     const RUN_DESKTOP = `data-ix-${animationID}-desktop`;
     const RUN_TABLET = `data-ix-${animationID}-tablet`;
     const RUN_MOBILE = `data-ix-${animationID}-mobile`;
-    const RUN_ALL = `data-ix-${animationID}-all`;
+    const RUN_ALL = `data-ix-${animationID}-run`;
     runAll = attr(true, item.getAttribute(RUN_ALL));
     runMobile = attr(true, item.getAttribute(RUN_MOBILE));
     runTablet = attr(true, item.getAttribute(RUN_TABLET));
@@ -1278,7 +1278,7 @@
       let inner = wrap.querySelector(INNER_SELECTOR);
       let track = wrap.querySelector(TRACK_SELECTOR);
       let items = gsap.utils.toArray(wrap.querySelectorAll(ITEM));
-      let bgItems = gsap.utils.toArray(wrap.querySelectorAll(BG_ITEM));
+      let bgItems = gsap.utils.toArray(document.querySelectorAll(BG_ITEM));
       if (!wrap || !inner || !track)
         return;
       let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
@@ -9004,6 +9004,115 @@
       }
       window.addEventListener("scroll", scrollDirectionListener);
     };
+    const homeHeroScroll = function(gsapContext) {
+      const WRAP = '[data-ix-homehero="wrap"]';
+      const HEADING_WRAP = '[data-ix-homehero="heading-wrap"]';
+      const BG_WRAP = '[data-ix-homehero="bg-wrap"]';
+      const WORK_WRAP = '[data-ix-homehero="work-wrap"]';
+      const TEXT = '[data-ix-homehero="text"]';
+      const CLIP = '[data-ix-homehero="clip"]';
+      const GRAPHIC = '[data-ix-homehero="graphic"]';
+      const DOT_LEFT = '[data-ix-homehero="dots-left"]';
+      const DOT_RIGHT = '[data-ix-homehero="dots-right"]';
+      const TEXTURE = '[data-ix-homehero="texture"]';
+      const wrap = document.querySelector(WRAP);
+      const headingWrap = document.querySelector(HEADING_WRAP);
+      const bgWrap = document.querySelector(BG_WRAP);
+      const workWrap = document.querySelector(WORK_WRAP);
+      const text = document.querySelector(TEXT);
+      const clip = document.querySelector(CLIP);
+      const graphic = document.querySelector(GRAPHIC);
+      const dotLeft = document.querySelector(DOT_LEFT);
+      const dotRight = document.querySelector(DOT_RIGHT);
+      const texture = document.querySelector(TEXTURE);
+      if (!wrap || !clip)
+        return;
+      const clipSize = clip.getBoundingClientRect();
+      const workHeight = workWrap.getBoundingClientRect().height;
+      console.log(workHeight);
+      const headingTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: headingWrap,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          markers: true
+        },
+        defaults: {
+          ease: "power1.out",
+          duration: 1
+        }
+      });
+      headingTL.set(headingWrap, {
+        height: "500vh",
+        pointerEvents: "none",
+        marginBottom: `-${workHeight / 1.5}px`
+      });
+      headingTL.set(clip, {
+        transformOrigin: "54.55% 84.5%"
+      });
+      ScrollTrigger.refresh();
+      headingTL.fromTo(
+        clip,
+        {
+          scale: 1,
+          y: "0vh",
+          x: "0vh"
+        },
+        {
+          scale: 135,
+          y: "0vh",
+          x: "0vh",
+          ease: "power1.inOut"
+        }
+      );
+      headingTL.to(
+        dotLeft,
+        {
+          yPercent: 100,
+          opacity: 0,
+          duration: 0.3
+        },
+        "<"
+      );
+      headingTL.to(
+        dotRight,
+        {
+          xPercent: 75,
+          opacity: 0,
+          duration: 0.3
+        },
+        "<"
+      );
+      headingTL.to(
+        graphic,
+        {
+          scale: 0.3,
+          opacity: 0,
+          duration: 0.3
+        },
+        "<"
+      );
+      headingTL.to(
+        texture,
+        {
+          opacity: 0,
+          duration: 0.5
+        },
+        "<"
+      );
+      headingTL.fromTo(
+        headingWrap,
+        {
+          opacity: 1
+        },
+        {
+          opacity: 0,
+          duration: 0.2
+        },
+        "<.8"
+      );
+    };
     const ctaSlider = function(isMobile) {
       const SLIDE_FIRST_LIST = '[data-ix-cta="list"]';
       const SLIDES = '[data-ix-cta="slide"]';
@@ -9203,6 +9312,7 @@
           workHeroSlider();
           caseSplide();
           ctaSlider(isMobile);
+          homeHeroScroll(gsapContext);
           if (!reduceMotion) {
             scrolling(gsapContext);
             scrollIn(gsapContext);

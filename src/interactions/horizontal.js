@@ -22,7 +22,7 @@ export const horizontal = function (gsapContext) {
     let inner = wrap.querySelector(INNER_SELECTOR);
     let track = wrap.querySelector(TRACK_SELECTOR);
     let items = gsap.utils.toArray(wrap.querySelectorAll(ITEM));
-    let bgItems = gsap.utils.toArray(wrap.querySelectorAll(BG_ITEM));
+    let bgItems = gsap.utils.toArray(document.querySelectorAll(BG_ITEM));
     if (!wrap || !inner || !track) return;
 
     //check breakpoints and quit function if set on specific breakpoints
