@@ -1310,25 +1310,10 @@
       function containerRight() {
         return inner.offsetLeft + inner.offsetWidth + "px";
       }
-      bgItems.forEach((bgItem, index) => {
-        if (index === 0) {
-          bgItem.classList.add(ACTIVE_CLASS);
-        } else {
-          bgItem.classList.remove(ACTIVE_CLASS);
-        }
-      });
-      items.forEach((item, index) => {
-        if (index === 0) {
-          item.classList.add(ACTIVE_CLASS);
-        } else {
-          item.classList.remove(ACTIVE_CLASS);
-        }
-      });
       const activateSlide = function(ID) {
         bgItems.forEach((bgItem, index) => {
           const itemID = bgItem.getAttribute(ITEM_ID);
           if (itemID === ID) {
-            console.log(itemID);
             bgItem.classList.add(ACTIVE_CLASS);
           } else {
             bgItem.classList.remove(ACTIVE_CLASS);
@@ -1345,6 +1330,8 @@
           }
         });
       };
+      let firstID = items[0].getAttribute(ITEM_ID);
+      activateSlide(firstID);
       items.forEach((currentItem, index) => {
         if (!currentItem)
           return;
@@ -8972,7 +8959,6 @@
 
   // src/index.js
   document.addEventListener("DOMContentLoaded", function() {
-    console.log("Local Script Loaded");
     if (gsap.ScrollTrigger !== void 0) {
       gsap.registerPlugin(ScrollTrigger);
     }
@@ -9021,7 +9007,6 @@
         return;
       const clipSize = clip.getBoundingClientRect();
       const workHeight = workWrap.getBoundingClientRect().height;
-      console.log(workHeight);
       const headingTL = gsap.timeline({
         scrollTrigger: {
           trigger: headingWrap,

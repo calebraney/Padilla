@@ -11,7 +11,7 @@ import Splide from '@splidejs/splide';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Comment out for production
-  console.log('Local Script Loaded');
+  // console.log('Local Script Loaded');
 
   // register gsap plugins if available
   if (gsap.ScrollTrigger !== undefined) {
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!wrap || !clip) return;
     const clipSize = clip.getBoundingClientRect();
     const workHeight = workWrap.getBoundingClientRect().height;
-    console.log(workHeight);
     const headingTL = gsap.timeline({
       scrollTrigger: {
         trigger: headingWrap,

@@ -63,27 +63,11 @@ export const horizontal = function (gsapContext) {
       return inner.offsetLeft + inner.offsetWidth + 'px';
     }
 
-    //make the first item active
-    bgItems.forEach((bgItem, index) => {
-      if (index === 0) {
-        bgItem.classList.add(ACTIVE_CLASS);
-      } else {
-        bgItem.classList.remove(ACTIVE_CLASS);
-      }
-    });
-    items.forEach((item, index) => {
-      if (index === 0) {
-        item.classList.add(ACTIVE_CLASS);
-      } else {
-        item.classList.remove(ACTIVE_CLASS);
-      }
-    });
     //function to activate an item based on its ID
     const activateSlide = function (ID) {
       bgItems.forEach((bgItem, index) => {
         const itemID = bgItem.getAttribute(ITEM_ID);
         if (itemID === ID) {
-          console.log(itemID);
           bgItem.classList.add(ACTIVE_CLASS);
         } else {
           bgItem.classList.remove(ACTIVE_CLASS);
@@ -101,6 +85,11 @@ export const horizontal = function (gsapContext) {
         }
       });
     };
+
+    //make the first item active
+    let firstID = items[0].getAttribute(ITEM_ID);
+    activateSlide(firstID);
+
     //activate each item based on hover
     items.forEach((currentItem, index) => {
       if (!currentItem) return;
