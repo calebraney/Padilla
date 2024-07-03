@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     });
     //set initial styles
-    console.log(isMobile);
     if (!isMobile) {
       headingTL.set(headingWrap, {
         height: '500vh',

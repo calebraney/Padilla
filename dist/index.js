@@ -9049,7 +9049,6 @@
           duration: 1
         }
       });
-      console.log(isMobile);
       if (!isMobile) {
         headingTL.set(headingWrap, {
           height: "500vh",
