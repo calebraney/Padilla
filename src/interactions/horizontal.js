@@ -32,6 +32,9 @@ export const horizontal = function (gsapContext) {
     let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
     if (runOnBreakpoint === false) return;
 
+    //create variables from GSAP context
+    let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
+
     // function to set section height
     const setScrollDistance = function () {
       wrap.style.height = 'calc(' + track.offsetWidth + 'px + 100vh)';
@@ -53,7 +56,7 @@ export const horizontal = function (gsapContext) {
       return inner.offsetLeft + inner.offsetWidth + 'px';
     }
 
-    tl = gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: wrap,
         start: 'top top',
@@ -92,12 +95,39 @@ export const horizontal = function (gsapContext) {
     activateSlide(firstID);
 
     //activate each item based on hover
-    items.forEach((currentItem, index) => {
-      if (!currentItem) return;
-      const ID = currentItem.getAttribute(ITEM_ID);
-      currentItem.addEventListener('mouseenter', function (e) {
-        activateSlide(ID);
+    if (!isMobile) {
+      items.forEach((currentItem, index) => {
+        if (!currentItem) return;
+        const ID = currentItem.getAttribute(ITEM_ID);
+        currentItem.addEventListener('mouseenter', function (e) {
+          activateSlide(ID);
+        });
       });
-    });
+    }
+
+    //activate each item based on scroll position
+    if (isMobile) {
+      items.forEach((currentItem, index) => {
+        if (!currentItem) return;
+        const ID = currentItem.getAttribute(ITEM_ID);
+        let itemtl = gsap.timeline({
+          scrollTrigger: {
+            trigger: currentItem,
+            containerAnimation: tl,
+            start: 'left center',
+            end: 'right center',
+            scrub: true,
+            // markers: true,
+            onEnter: () => {
+              activateSlide(ID);
+            },
+            onEnterBack: () => {
+              activateSlide(ID);
+            },
+          },
+          defaults: { ease: 'none' },
+        });
+      });
+    }
   });
 };

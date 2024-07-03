@@ -961,7 +961,7 @@
       settings.scrub = attr(settings.scrub, item.getAttribute(SCROLL_SCRUB));
       settings.start = attr(settings.start, item.getAttribute(SCROLL_START));
       settings.end = attr(settings.end, item.getAttribute(SCROLL_END));
-      const tl2 = gsap.timeline({
+      const tl = gsap.timeline({
         defaults: {
           duration: 0.6,
           ease: "power1.out"
@@ -974,9 +974,9 @@
           scrub: settings.scrub
         }
       });
-      return tl2;
+      return tl;
     };
-    const defaultTween = function(item, tl2, options = {}) {
+    const defaultTween = function(item, tl, options = {}) {
       const varsFrom = {
         opacity: 0,
         y: "2rem"
@@ -988,7 +988,7 @@
       if (options.stagger === true) {
         varsTo.stagger = { each: 0.1, from: "start" };
       }
-      const tween = tl2.fromTo(item, varsFrom, varsTo);
+      const tween = tl.fromTo(item, varsFrom, varsTo);
       return tween;
     };
     const scrollInHeading = function(item) {
@@ -998,9 +998,9 @@
       const splitText = runSplit(item);
       if (!splitText)
         return;
-      const tl2 = scrollInTL(item);
-      const tween = defaultTween(splitText.words, tl2, { stagger: true });
-      tl2.eventCallback("onComplete", () => {
+      const tl = scrollInTL(item);
+      const tween = defaultTween(splitText.words, tl, { stagger: true });
+      tl.eventCallback("onComplete", () => {
         splitText.revert();
       });
     };
@@ -1010,8 +1010,8 @@
       if (item.classList.contains("w-richtext")) {
         item = item.firstChild;
       }
-      const tl2 = scrollInTL(item);
-      const tween = defaultTween(item, tl2);
+      const tl = scrollInTL(item);
+      const tween = defaultTween(item, tl);
     };
     const getCLipStart = function(item) {
       let defaultDirection = "right";
@@ -1042,8 +1042,8 @@
         return;
       const clipStart = getCLipStart(item);
       const clipEnd = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
-      const tl2 = scrollInTL(item);
-      tl2.fromTo(
+      const tl = scrollInTL(item);
+      tl.fromTo(
         item,
         {
           clipPath: clipStart
@@ -1059,8 +1059,8 @@
         return;
       const clipStart = getCLipStart(item);
       const clipEnd = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
-      const tl2 = scrollInTL(item);
-      tl2.fromTo(
+      const tl = scrollInTL(item);
+      tl.fromTo(
         item,
         {
           clipPath: clipStart
@@ -1077,8 +1077,8 @@
       if (children2.length === 0)
         return;
       children2.forEach((child2) => {
-        const tl2 = scrollInTL(child2);
-        const tween = defaultTween(child2, tl2);
+        const tl = scrollInTL(child2);
+        const tween = defaultTween(child2, tl);
       });
     };
     const scrollInStagger = function(item) {
@@ -1087,8 +1087,8 @@
       const children2 = gsap.utils.toArray(item.children);
       if (children2.length === 0)
         return;
-      const tl2 = scrollInTL(item);
-      const tween = defaultTween(children2, tl2, { stagger: true });
+      const tl = scrollInTL(item);
+      const tween = defaultTween(children2, tl, { stagger: true });
     };
     const scrollInRichText = function(item) {
       if (!item)
@@ -1208,7 +1208,7 @@
       if (isMobile && scrollingItem.getAttribute(MOBILE_END)) {
         tlSettings.start = attr(tlSettings.start, scrollingItem.getAttribute(MOBILE_END));
       }
-      const tl2 = gsap.timeline({
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger,
           start: tlSettings.start,
@@ -1256,7 +1256,7 @@
         varsFrom.clipPath = processAttribute(CLIP_START, "string");
         varsTo.clipPath = processAttribute(CLIP_END, "string");
         const position = attr("<", layer.getAttribute(POSITION));
-        let fromTween = tl2.fromTo(layer, varsFrom, varsTo, position);
+        let fromTween = tl.fromTo(layer, varsFrom, varsTo, position);
       });
     });
   };
@@ -1287,6 +1287,7 @@
       let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
       if (runOnBreakpoint === false)
         return;
+      let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
       const setScrollDistance = function() {
         wrap.style.height = "calc(" + track.offsetWidth + "px + 100vh)";
       };
@@ -1302,7 +1303,7 @@
       function containerRight() {
         return inner.offsetLeft + inner.offsetWidth + "px";
       }
-      tl = gsap.timeline({
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrap,
           start: "top top",
@@ -1334,14 +1335,39 @@
       };
       let firstID = items[0].getAttribute(ITEM_ID);
       activateSlide(firstID);
-      items.forEach((currentItem, index) => {
-        if (!currentItem)
-          return;
-        const ID = currentItem.getAttribute(ITEM_ID);
-        currentItem.addEventListener("mouseenter", function(e) {
-          activateSlide(ID);
+      if (!isMobile) {
+        items.forEach((currentItem, index) => {
+          if (!currentItem)
+            return;
+          const ID = currentItem.getAttribute(ITEM_ID);
+          currentItem.addEventListener("mouseenter", function(e) {
+            activateSlide(ID);
+          });
         });
-      });
+      }
+      if (isMobile) {
+        items.forEach((currentItem, index) => {
+          if (!currentItem)
+            return;
+          const ID = currentItem.getAttribute(ITEM_ID);
+          let itemtl = gsap.timeline({
+            scrollTrigger: {
+              trigger: currentItem,
+              containerAnimation: tl,
+              start: "left center",
+              end: "right center",
+              scrub: true,
+              onEnter: () => {
+                activateSlide(ID);
+              },
+              onEnterBack: () => {
+                activateSlide(ID);
+              }
+            },
+            defaults: { ease: "none" }
+          });
+        });
+      }
     });
   };
 
@@ -1359,7 +1385,7 @@
     const items = gsap.utils.toArray(`[${ATTRIBUTE}]`);
     if (items.length === 0)
       return;
-    const tl2 = gsap.timeline({
+    const tl = gsap.timeline({
       paused: true,
       defaults: {
         ease: "power1.out",
@@ -1378,8 +1404,8 @@
       if (!splitText)
         return;
       const position = attr("<", item.getAttribute(POSITION), false);
-      tl2.set(item, { opacity: 1 });
-      tl2.fromTo(
+      tl.set(item, { opacity: 1 });
+      tl.fromTo(
         splitText.words,
         { opacity: 0, y: "50%", rotateX: 45 },
         { opacity: 1, y: "0%", rotateX: 0, stagger: { each: 0.1, from: "left" } },
@@ -1388,11 +1414,11 @@
     };
     const loadImage = function(item) {
       const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
-      tl2.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
+      tl.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
     };
     const loadItem = function(item) {
       const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
-      tl2.fromTo(item, { opacity: 0, y: "2rem" }, { opacity: 1, y: "0rem" }, position);
+      tl.fromTo(item, { opacity: 0, y: "2rem" }, { opacity: 1, y: "0rem" }, position);
     };
     const loadStagger = function(item) {
       if (!item)
@@ -1427,8 +1453,8 @@
         loadStagger(item);
       }
     });
-    tl2.play(0);
-    return tl2;
+    tl.play(0);
+    return tl;
   };
 
   // node_modules/swiper/shared/ssr-window.esm.mjs
@@ -9134,7 +9160,7 @@
       } else {
         currentSlide = 3;
       }
-      let tl2 = gsap.timeline({
+      let tl = gsap.timeline({
         repeat: -1,
         onRepeat: () => {
           currentSlide = 3;
@@ -9147,16 +9173,16 @@
           duration: 1
         }
       });
-      tl2.set(allSlides, { opacity: START_OPACITY });
-      tl2.set(allSlides[currentSlide], { opacity: ACTIVE_OPACITY });
+      tl.set(allSlides, { opacity: START_OPACITY });
+      tl.set(allSlides[currentSlide], { opacity: ACTIVE_OPACITY });
       primarySlides.forEach((item, index) => {
         let elHeight = item.offsetHeight;
         distance = distance - elHeight;
-        tl2.to(slideList, {
+        tl.to(slideList, {
           y: distance,
           delay: 1
         });
-        tl2.to(
+        tl.to(
           allSlides[currentSlide],
           {
             opacity: START_OPACITY,
@@ -9164,7 +9190,7 @@
           },
           "<"
         );
-        tl2.to(
+        tl.to(
           allSlides[currentSlide + 1],
           {
             opacity: ACTIVE_OPACITY,
