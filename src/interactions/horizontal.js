@@ -4,6 +4,7 @@ export const horizontal = function (gsapContext) {
   const ANIMATION_ID = 'horizontal';
   //selectors
   const WRAP_SELECTOR = '[data-ix-horizontal="wrap"]';
+  const WORK_WRAP = '[data-ix-homehero="work-wrap"]';
   const INNER_SELECTOR = '[data-ix-horizontal="inner"]';
   const TRACK_SELECTOR = '[data-ix-horizontal="track"]';
   const ITEM = '[data-ix-horizontal="item"]';
@@ -20,6 +21,7 @@ export const horizontal = function (gsapContext) {
   sections.forEach((section) => {
     //get elements
     let wrap = section;
+    const workWrap = document.querySelector(WORK_WRAP);
     let inner = wrap.querySelector(INNER_SELECTOR);
     let track = wrap.querySelector(TRACK_SELECTOR);
     let items = gsap.utils.toArray(document.querySelectorAll(ITEM));
@@ -77,7 +79,7 @@ export const horizontal = function (gsapContext) {
         const itemTheme = attr('light', item.getAttribute(ITEM_THEME));
         if (itemID === ID) {
           item.classList.add(ACTIVE_CLASS);
-          wrap.setAttribute('data-theme', itemTheme);
+          workWrap.setAttribute('data-theme', itemTheme);
           // wrap.style.backgroundColor = 'red';
         } else {
           item.classList.remove(ACTIVE_CLASS);
