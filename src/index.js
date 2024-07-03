@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const texture = document.querySelector(TEXTURE);
     //check for elements
     if (!wrap || !clip) return;
+
+    //create variables from GSAP context
+    let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
+    //get sizes of elements
     const clipSize = clip.getBoundingClientRect();
     const workHeight = workWrap.getBoundingClientRect().height;
     const headingTL = gsap.timeline({
@@ -96,15 +100,27 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     });
     //set initial styles
-    headingTL.set(headingWrap, {
-      height: '500vh',
-      marginBottom: `-${workHeight / 1.5}px`,
-    });
-    //OG transform '54.56% 84.6%',
-    //Second Transform Origin: '54.68% 85.1%',
-    headingTL.set(clip, {
-      transformOrigin: '54.68% 85.1%',
-    });
+    console.log(isMobile);
+    if (!isMobile) {
+      headingTL.set(headingWrap, {
+        height: '500vh',
+        marginBottom: `-${workHeight / 1.5}px`,
+      });
+      //OG transform '54.56% 84.6%',
+      //Second Transform Origin: '54.68% 85.1%',
+      headingTL.set(clip, {
+        transformOrigin: '54.68% 85.1%',
+      });
+    } else {
+      headingTL.set(headingWrap, {
+        height: '400vh',
+        marginBottom: `-${workHeight / 1.75}px`,
+      });
+      headingTL.set(clip, {
+        transformOrigin: '55.06% 83.8%',
+      });
+    }
+
     ScrollTrigger.refresh();
     headingTL.fromTo(
       clip,
@@ -112,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
         scale: 1,
       },
       {
-        scale: 135,
+        scale: isMobile ? 175 : 135,
         ease: 'power1.inOut',
       }
     );
@@ -158,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       {
         opacity: 0,
-        duration: 0.2,
+        duration: isMobile ? 0.2 : 0.2,
       },
       '<.8'
     );
@@ -168,11 +184,17 @@ document.addEventListener('DOMContentLoaded', function () {
         filter: 'blur(0px)',
       },
       {
-        filter: 'blur(8px)',
-        duration: 0.15,
+        filter: isMobile ? 'blur(32px)' : 'blur(8px)',
+        duration: isMobile ? 0.15 : 0.15,
       },
       '<.05'
     );
+    if (isMobile) {
+      headingTL.to(texture, {
+        opacity: 0,
+        duration: 0.25,
+      });
+    }
   };
 
   const ctaSlider = function (isMobile) {
