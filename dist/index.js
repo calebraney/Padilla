@@ -961,7 +961,7 @@
       settings.scrub = attr(settings.scrub, item.getAttribute(SCROLL_SCRUB));
       settings.start = attr(settings.start, item.getAttribute(SCROLL_START));
       settings.end = attr(settings.end, item.getAttribute(SCROLL_END));
-      const tl = gsap.timeline({
+      const tl2 = gsap.timeline({
         defaults: {
           duration: 0.6,
           ease: "power1.out"
@@ -974,9 +974,9 @@
           scrub: settings.scrub
         }
       });
-      return tl;
+      return tl2;
     };
-    const defaultTween = function(item, tl, options = {}) {
+    const defaultTween = function(item, tl2, options = {}) {
       const varsFrom = {
         opacity: 0,
         y: "2rem"
@@ -988,7 +988,7 @@
       if (options.stagger === true) {
         varsTo.stagger = { each: 0.1, from: "start" };
       }
-      const tween = tl.fromTo(item, varsFrom, varsTo);
+      const tween = tl2.fromTo(item, varsFrom, varsTo);
       return tween;
     };
     const scrollInHeading = function(item) {
@@ -998,9 +998,9 @@
       const splitText = runSplit(item);
       if (!splitText)
         return;
-      const tl = scrollInTL(item);
-      const tween = defaultTween(splitText.words, tl, { stagger: true });
-      tl.eventCallback("onComplete", () => {
+      const tl2 = scrollInTL(item);
+      const tween = defaultTween(splitText.words, tl2, { stagger: true });
+      tl2.eventCallback("onComplete", () => {
         splitText.revert();
       });
     };
@@ -1010,8 +1010,8 @@
       if (item.classList.contains("w-richtext")) {
         item = item.firstChild;
       }
-      const tl = scrollInTL(item);
-      const tween = defaultTween(item, tl);
+      const tl2 = scrollInTL(item);
+      const tween = defaultTween(item, tl2);
     };
     const getCLipStart = function(item) {
       let defaultDirection = "right";
@@ -1042,8 +1042,8 @@
         return;
       const clipStart = getCLipStart(item);
       const clipEnd = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
-      const tl = scrollInTL(item);
-      tl.fromTo(
+      const tl2 = scrollInTL(item);
+      tl2.fromTo(
         item,
         {
           clipPath: clipStart
@@ -1059,8 +1059,8 @@
         return;
       const clipStart = getCLipStart(item);
       const clipEnd = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
-      const tl = scrollInTL(item);
-      tl.fromTo(
+      const tl2 = scrollInTL(item);
+      tl2.fromTo(
         item,
         {
           clipPath: clipStart
@@ -1077,8 +1077,8 @@
       if (children2.length === 0)
         return;
       children2.forEach((child2) => {
-        const tl = scrollInTL(child2);
-        const tween = defaultTween(child2, tl);
+        const tl2 = scrollInTL(child2);
+        const tween = defaultTween(child2, tl2);
       });
     };
     const scrollInStagger = function(item) {
@@ -1087,8 +1087,8 @@
       const children2 = gsap.utils.toArray(item.children);
       if (children2.length === 0)
         return;
-      const tl = scrollInTL(item);
-      const tween = defaultTween(children2, tl, { stagger: true });
+      const tl2 = scrollInTL(item);
+      const tween = defaultTween(children2, tl2, { stagger: true });
     };
     const scrollInRichText = function(item) {
       if (!item)
@@ -1208,7 +1208,7 @@
       if (isMobile && scrollingItem.getAttribute(MOBILE_END)) {
         tlSettings.start = attr(tlSettings.start, scrollingItem.getAttribute(MOBILE_END));
       }
-      const tl = gsap.timeline({
+      const tl2 = gsap.timeline({
         scrollTrigger: {
           trigger,
           start: tlSettings.start,
@@ -1256,7 +1256,7 @@
         varsFrom.clipPath = processAttribute(CLIP_START, "string");
         varsTo.clipPath = processAttribute(CLIP_END, "string");
         const position = attr("<", layer.getAttribute(POSITION));
-        let fromTween = tl.fromTo(layer, varsFrom, varsTo, position);
+        let fromTween = tl2.fromTo(layer, varsFrom, varsTo, position);
       });
     });
   };
@@ -1294,7 +1294,13 @@
         ScrollTrigger.refresh();
         window.addEventListener("resize", setScrollDistance);
       }
-      let tl = gsap.timeline({
+      function containerLeft() {
+        return inner.offsetLeft + "px";
+      }
+      function containerRight() {
+        return inner.offsetLeft + inner.offsetWidth + "px";
+      }
+      tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrap,
           start: "top top",
@@ -1304,12 +1310,6 @@
         defaults: { ease: "none" }
       });
       tl.to(track, { xPercent: -100 });
-      function containerLeft() {
-        return inner.offsetLeft + "px";
-      }
-      function containerRight() {
-        return inner.offsetLeft + inner.offsetWidth + "px";
-      }
       const activateSlide = function(ID) {
         bgItems.forEach((bgItem, index) => {
           const itemID = bgItem.getAttribute(ITEM_ID);
@@ -1357,7 +1357,7 @@
     const items = gsap.utils.toArray(`[${ATTRIBUTE}]`);
     if (items.length === 0)
       return;
-    const tl = gsap.timeline({
+    const tl2 = gsap.timeline({
       paused: true,
       defaults: {
         ease: "power1.out",
@@ -1376,8 +1376,8 @@
       if (!splitText)
         return;
       const position = attr("<", item.getAttribute(POSITION), false);
-      tl.set(item, { opacity: 1 });
-      tl.fromTo(
+      tl2.set(item, { opacity: 1 });
+      tl2.fromTo(
         splitText.words,
         { opacity: 0, y: "50%", rotateX: 45 },
         { opacity: 1, y: "0%", rotateX: 0, stagger: { each: 0.1, from: "left" } },
@@ -1386,11 +1386,11 @@
     };
     const loadImage = function(item) {
       const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
-      tl.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
+      tl2.fromTo(item, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1 }, position);
     };
     const loadItem = function(item) {
       const position = attr(DEFAULT_STAGGER, item.getAttribute(POSITION), false);
-      tl.fromTo(item, { opacity: 0, y: "2rem" }, { opacity: 1, y: "0rem" }, position);
+      tl2.fromTo(item, { opacity: 0, y: "2rem" }, { opacity: 1, y: "0rem" }, position);
     };
     const loadStagger = function(item) {
       if (!item)
@@ -1425,8 +1425,8 @@
         loadStagger(item);
       }
     });
-    tl.play(0);
-    return tl;
+    tl2.play(0);
+    return tl2;
   };
 
   // node_modules/swiper/shared/ssr-window.esm.mjs
@@ -9114,7 +9114,7 @@
       } else {
         currentSlide = 3;
       }
-      let tl = gsap.timeline({
+      let tl2 = gsap.timeline({
         repeat: -1,
         onRepeat: () => {
           currentSlide = 3;
@@ -9127,16 +9127,16 @@
           duration: 1
         }
       });
-      tl.set(allSlides, { opacity: START_OPACITY });
-      tl.set(allSlides[currentSlide], { opacity: ACTIVE_OPACITY });
+      tl2.set(allSlides, { opacity: START_OPACITY });
+      tl2.set(allSlides[currentSlide], { opacity: ACTIVE_OPACITY });
       primarySlides.forEach((item, index) => {
         let elHeight = item.offsetHeight;
         distance = distance - elHeight;
-        tl.to(slideList, {
+        tl2.to(slideList, {
           y: distance,
           delay: 1
         });
-        tl.to(
+        tl2.to(
           allSlides[currentSlide],
           {
             opacity: START_OPACITY,
@@ -9144,7 +9144,7 @@
           },
           "<"
         );
-        tl.to(
+        tl2.to(
           allSlides[currentSlide + 1],
           {
             opacity: ACTIVE_OPACITY,

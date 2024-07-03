@@ -42,8 +42,16 @@ export const horizontal = function (gsapContext) {
       window.addEventListener('resize', setScrollDistance);
     }
 
-    // create main horizontal scroll timeline
-    let tl = gsap.timeline({
+    // get container left position
+    function containerLeft() {
+      return inner.offsetLeft + 'px';
+    }
+    // get container right position
+    function containerRight() {
+      return inner.offsetLeft + inner.offsetWidth + 'px';
+    }
+
+    tl = gsap.timeline({
       scrollTrigger: {
         trigger: wrap,
         start: 'top top',
@@ -53,15 +61,6 @@ export const horizontal = function (gsapContext) {
       defaults: { ease: 'none' },
     });
     tl.to(track, { xPercent: -100 });
-
-    // get container left position
-    function containerLeft() {
-      return inner.offsetLeft + 'px';
-    }
-    // get container right position
-    function containerRight() {
-      return inner.offsetLeft + inner.offsetWidth + 'px';
-    }
 
     //function to activate an item based on its ID
     const activateSlide = function (ID) {
