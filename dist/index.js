@@ -9055,15 +9055,14 @@
           marginBottom: `-${workHeight / 1.5}px`
         });
         headingTL.set(clip, {
-          transformOrigin: "54.68% 85.1%"
+          transformOrigin: "60.24% 93.55%"
         });
       } else {
         headingTL.set(headingWrap, {
-          height: "400vh",
           marginBottom: `-${workHeight / 1.75}px`
         });
         headingTL.set(clip, {
-          transformOrigin: "55.06% 83.8%"
+          transformOrigin: "60.6% 93%"
         });
       }
       ScrollTrigger.refresh();
