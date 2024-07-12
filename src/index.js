@@ -352,6 +352,41 @@ document.addEventListener('DOMContentLoaded', function () {
   //   });
   // };
 
+  const servicesSlider = function () {
+    //Swiper selectors
+    const WRAP = '[data-ix-servicesslider="wrap"]';
+    const SWIPER = '.services_slider_splide';
+    //Button selectors
+    const NEXT_BUTTON = '.splide__arrow--prev';
+    const PREVIOUS_BUTTON = '.splide__arrow--next';
+
+    document.querySelectorAll(WRAP).forEach(function (wrap) {
+      if (!wrap) return;
+      const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
+      const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
+      const swiperEl = wrap.querySelector(SWIPER);
+      if (!nextButtonEl || !previousButtonEl || !swiperEl) return;
+
+      const splide = new Splide(swiperEl, {
+        type: 'loop', //slide or loop
+        speed: 800, // transition speed in miliseconds
+        dragAngleThreshold: 60, // default is 30
+        autoWidth: false, // for cards with differing widths
+        rewind: false, // go back to beginning when reach end
+        gap: '2rem',
+        perPage: 3,
+        perMove: 1,
+        arrows: { prev: previousButtonEl, next: nextButtonEl },
+        classes: {
+          // Add classes for arrows.
+          prev: PREVIOUS_BUTTON,
+          next: NEXT_BUTTON,
+        },
+      });
+      splide.mount();
+    });
+  };
+
   const workHeroSlider = function () {
     //selectors
     const WRAP = '[data-ix-workslider="wrap"]';
@@ -483,6 +518,8 @@ document.addEventListener('DOMContentLoaded', function () {
         caseSplide();
         ctaSlider(isMobile);
         homeHeroScroll(gsapContext);
+        servicesSlider();
+
         // caseSlider()
         //conditional interactions
         if (!reduceMotion) {

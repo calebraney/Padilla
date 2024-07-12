@@ -9232,6 +9232,37 @@
         splide.mount();
       });
     };
+    const servicesSlider = function() {
+      const WRAP = '[data-ix-servicesslider="wrap"]';
+      const SWIPER = ".services_slider_splide";
+      const NEXT_BUTTON = ".splide__arrow--prev";
+      const PREVIOUS_BUTTON = ".splide__arrow--next";
+      document.querySelectorAll(WRAP).forEach(function(wrap) {
+        if (!wrap)
+          return;
+        const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
+        const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
+        const swiperEl = wrap.querySelector(SWIPER);
+        if (!nextButtonEl || !previousButtonEl || !swiperEl)
+          return;
+        const splide = new Splide(swiperEl, {
+          type: "loop",
+          speed: 800,
+          dragAngleThreshold: 60,
+          autoWidth: false,
+          rewind: false,
+          gap: "2rem",
+          perPage: 3,
+          perMove: 1,
+          arrows: { prev: previousButtonEl, next: nextButtonEl },
+          classes: {
+            prev: PREVIOUS_BUTTON,
+            next: NEXT_BUTTON
+          }
+        });
+        splide.mount();
+      });
+    };
     const workHeroSlider = function() {
       const WRAP = '[data-ix-workslider="wrap"]';
       const SWIPER_BG = '[data-ix-workslider="swiper-bg"]';
@@ -9340,6 +9371,7 @@
           caseSplide();
           ctaSlider(isMobile);
           homeHeroScroll(gsapContext);
+          servicesSlider();
           if (!reduceMotion) {
             scrolling(gsapContext);
             scrollIn(gsapContext);
