@@ -212,18 +212,20 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!slideList || !primarySlides.length === 0) return;
     let distance = 0;
     let currentSlide;
-    if (isMobile) {
-      currentSlide = 1;
-    } else {
-      currentSlide = 3;
-    }
+    //parameters for current slide
+    const setCurrentSlide = function () {
+      if (isMobile) {
+        currentSlide = 1;
+      } else {
+        currentSlide = 1;
+      }
+    };
+    setCurrentSlide();
+
     let tl = gsap.timeline({
       repeat: -1,
       onRepeat: () => {
-        currentSlide = 3;
-        if (isMobile) {
-          currentSlide = 1;
-        }
+        setCurrentSlide();
       },
       defaults: {
         ease: 'power2.out',
