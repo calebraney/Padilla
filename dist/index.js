@@ -1008,10 +1008,16 @@
       if (!item)
         return;
       if (item.classList.contains("w-richtext")) {
-        item = item.firstChild;
+        const children2 = gsap.utils.toArray(item.children);
+          return;
+        children2.forEach((child2) => {
+          const tl = scrollInTL(child2);
+          const tween = defaultTween(child2, tl);
+        });
+      } else {
+        const tl = scrollInTL(item);
+        const tween = defaultTween(item, tl);
       }
-      const tl = scrollInTL(item);
-      const tween = defaultTween(item, tl);
     };
     const getCLipStart = function(item) {
       let defaultDirection = "right";

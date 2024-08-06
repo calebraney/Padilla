@@ -92,12 +92,19 @@ export const scrollIn = function (gsapContext) {
 
   const scrollInItem = function (item) {
     if (!item) return;
-    //check if item is rich text
+    //check if item is rich text and if it is apply animation to each child
     if (item.classList.contains('w-richtext')) {
-      item = item.firstChild;
+      //get the children of the item
+      const children = gsap.utils.toArray(item.children);
+      if (children.length === 0) return;
+      children.forEach((child) => {
+        const tl = scrollInTL(child);
+        const tween = defaultTween(child, tl);
+      });
+    } else {
+      const tl = scrollInTL(item);
+      const tween = defaultTween(item, tl);
     }
-    const tl = scrollInTL(item);
-    const tween = defaultTween(item, tl);
   };
 
   //utility function to get the clipping direction of items (horizontal or vertical only)
