@@ -1009,6 +1009,7 @@
         return;
       if (item.classList.contains("w-richtext")) {
         const children2 = gsap.utils.toArray(item.children);
+        if (children2.length === 0)
           return;
         children2.forEach((child2) => {
           const tl = scrollInTL(child2);
