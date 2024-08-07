@@ -295,6 +295,23 @@ document.addEventListener('DOMContentLoaded', function () {
         gap: '3.5%',
         perPage: 3,
         perMove: 1,
+        breakpoints: {
+          991: {
+            // Tablet
+            perPage: 3,
+            gap: '3vw',
+          },
+          767: {
+            // Mobile Landscape
+            perPage: 2,
+            gap: '3vw',
+          },
+          479: {
+            // Mobile Portrait
+            perPage: 1,
+            gap: '3vw',
+          },
+        },
         arrows: { prev: previousButtonEl, next: nextButtonEl },
         classes: {
           // Add classes for arrows.
@@ -356,20 +373,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const servicesSlider = function () {
     //Swiper selectors
-    const WRAP = '[data-ix-servicesslider="wrap"]';
-    const SWIPER = '.services_slider_splide';
+    const SLIDER = '.services_slider_splide';
     //Button selectors
     const NEXT_BUTTON = '.splide__arrow--prev';
     const PREVIOUS_BUTTON = '.splide__arrow--next';
 
-    document.querySelectorAll(WRAP).forEach(function (wrap) {
-      if (!wrap) return;
-      const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
-      const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
-      const swiperEl = wrap.querySelector(SWIPER);
-      if (!nextButtonEl || !previousButtonEl || !swiperEl) return;
+    document.querySelectorAll(SLIDER).forEach(function (slider) {
+      if (!slider) return;
+      const nextButtonEl = slider.querySelector(NEXT_BUTTON);
+      const previousButtonEl = slider.querySelector(PREVIOUS_BUTTON);
+      if (!nextButtonEl || !previousButtonEl || !slider) return;
 
-      const splide = new Splide(swiperEl, {
+      const splide = new Splide(slider, {
         type: 'loop', //slide or loop
         speed: 800, // transition speed in miliseconds
         dragAngleThreshold: 60, // default is 30
@@ -378,6 +393,72 @@ document.addEventListener('DOMContentLoaded', function () {
         gap: '2rem',
         perPage: 3,
         perMove: 1,
+        breakpoints: {
+          991: {
+            // Tablet
+            perPage: 2,
+            gap: '3vw',
+          },
+          767: {
+            // Mobile Landscape
+            perPage: 1,
+            gap: '3vw',
+          },
+          479: {
+            // Mobile Portrait
+            perPage: 1,
+            gap: '3vw',
+          },
+        },
+        arrows: { prev: previousButtonEl, next: nextButtonEl },
+        classes: {
+          // Add classes for arrows.
+          prev: PREVIOUS_BUTTON,
+          next: NEXT_BUTTON,
+        },
+      });
+      splide.mount();
+    });
+  };
+  const newsSlider = function () {
+    //Swiper selectors
+    const SLIDER = '.article_slider_splide';
+    //Button selectors
+    const NEXT_BUTTON = '.splide__arrow--prev';
+    const PREVIOUS_BUTTON = '.splide__arrow--next';
+
+    document.querySelectorAll(SLIDER).forEach(function (slider) {
+      if (!slider) return;
+      const nextButtonEl = slider.querySelector(NEXT_BUTTON);
+      const previousButtonEl = slider.querySelector(PREVIOUS_BUTTON);
+      if (!nextButtonEl || !previousButtonEl || !slider) return;
+
+      const splide = new Splide(slider, {
+        type: 'loop', //slide or loop
+        speed: 800, // transition speed in miliseconds
+        dragAngleThreshold: 60, // default is 30
+        autoWidth: false, // for cards with differing widths
+        rewind: false, // go back to beginning when reach end
+        gap: '2rem',
+        perPage: 3,
+        perMove: 1,
+        breakpoints: {
+          991: {
+            // Tablet
+            perPage: 2,
+            gap: '3vw',
+          },
+          767: {
+            // Mobile Landscape
+            perPage: 1,
+            gap: '3vw',
+          },
+          479: {
+            // Mobile Portrait
+            perPage: 1,
+            gap: '3vw',
+          },
+        },
         arrows: { prev: previousButtonEl, next: nextButtonEl },
         classes: {
           // Add classes for arrows.
@@ -521,6 +602,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctaSlider(isMobile);
         homeHeroScroll(gsapContext);
         servicesSlider();
+        newsSlider();
 
         // caseSlider()
         //conditional interactions

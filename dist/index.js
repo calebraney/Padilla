@@ -9230,6 +9230,20 @@
           gap: "3.5%",
           perPage: 3,
           perMove: 1,
+          breakpoints: {
+            991: {
+              perPage: 3,
+              gap: "3vw"
+            },
+            767: {
+              perPage: 2,
+              gap: "3vw"
+            },
+            479: {
+              perPage: 1,
+              gap: "3vw"
+            }
+          },
           arrows: { prev: previousButtonEl, next: nextButtonEl },
           classes: {
             prev: PREVIOUS_BUTTON,
@@ -9240,19 +9254,17 @@
       });
     };
     const servicesSlider = function() {
-      const WRAP = '[data-ix-servicesslider="wrap"]';
-      const SWIPER = ".services_slider_splide";
+      const SLIDER = ".services_slider_splide";
       const NEXT_BUTTON = ".splide__arrow--prev";
       const PREVIOUS_BUTTON = ".splide__arrow--next";
-      document.querySelectorAll(WRAP).forEach(function(wrap) {
-        if (!wrap)
+      document.querySelectorAll(SLIDER).forEach(function(slider) {
+        if (!slider)
           return;
-        const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
-        const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
-        const swiperEl = wrap.querySelector(SWIPER);
-        if (!nextButtonEl || !previousButtonEl || !swiperEl)
+        const nextButtonEl = slider.querySelector(NEXT_BUTTON);
+        const previousButtonEl = slider.querySelector(PREVIOUS_BUTTON);
+        if (!nextButtonEl || !previousButtonEl || !slider)
           return;
-        const splide = new Splide(swiperEl, {
+        const splide = new Splide(slider, {
           type: "loop",
           speed: 800,
           dragAngleThreshold: 60,
@@ -9261,6 +9273,63 @@
           gap: "2rem",
           perPage: 3,
           perMove: 1,
+          breakpoints: {
+            991: {
+              perPage: 2,
+              gap: "3vw"
+            },
+            767: {
+              perPage: 1,
+              gap: "3vw"
+            },
+            479: {
+              perPage: 1,
+              gap: "3vw"
+            }
+          },
+          arrows: { prev: previousButtonEl, next: nextButtonEl },
+          classes: {
+            prev: PREVIOUS_BUTTON,
+            next: NEXT_BUTTON
+          }
+        });
+        splide.mount();
+      });
+    };
+    const newsSlider = function() {
+      const SLIDER = ".article_slider_splide";
+      const NEXT_BUTTON = ".splide__arrow--prev";
+      const PREVIOUS_BUTTON = ".splide__arrow--next";
+      document.querySelectorAll(SLIDER).forEach(function(slider) {
+        if (!slider)
+          return;
+        const nextButtonEl = slider.querySelector(NEXT_BUTTON);
+        const previousButtonEl = slider.querySelector(PREVIOUS_BUTTON);
+        if (!nextButtonEl || !previousButtonEl || !slider)
+          return;
+        const splide = new Splide(slider, {
+          type: "loop",
+          speed: 800,
+          dragAngleThreshold: 60,
+          autoWidth: false,
+          rewind: false,
+          gap: "2rem",
+          perPage: 3,
+          perMove: 1,
+          breakpoints: {
+            991: {
+              perPage: 2,
+              gap: "3vw"
+            },
+            767: {
+              perPage: 1,
+              gap: "3vw"
+            },
+            479: {
+              perPage: 1,
+              gap: "3vw"
+            }
+          },
           arrows: { prev: previousButtonEl, next: nextButtonEl },
           classes: {
             prev: PREVIOUS_BUTTON,
@@ -9379,6 +9448,7 @@
           ctaSlider(isMobile);
           homeHeroScroll(gsapContext);
           servicesSlider();
+          newsSlider();
           if (!reduceMotion) {
             scrolling(gsapContext);
             scrollIn(gsapContext);
