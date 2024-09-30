@@ -275,19 +275,26 @@ document.addEventListener('DOMContentLoaded', function () {
     //Button selectors
     const NEXT_BUTTON = '.splide__arrow--prev';
     const PREVIOUS_BUTTON = '.splide__arrow--next';
+    //options
+    const LOOP_MODE = 'data-ix-caseslider-loop';
     //classes
     const ACTIVE_CLASS = 'is-active';
     const DISABLED_CLASS = 'is-disabled';
 
     document.querySelectorAll(WRAP).forEach(function (wrap) {
       if (!wrap) return;
+      const loopMode = attr(false, wrap.getAttribute(LOOP_MODE));
       const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
       const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
       const swiperEl = wrap.querySelector(SWIPER);
       if (!nextButtonEl || !previousButtonEl || !swiperEl) return;
-
+      //define as slide or loop based on the loop mode
+      let sliderType = 'slide';
+      if (loopMode) {
+        sliderType = 'loop';
+      }
       const splide = new Splide(swiperEl, {
-        type: 'loop', //slide or loop
+        type: sliderType, //slide or loop
         speed: 800, // transition speed in miliseconds
         dragAngleThreshold: 60, // default is 30
         autoWidth: false, // for cards with differing widths

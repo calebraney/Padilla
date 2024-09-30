@@ -9211,18 +9211,24 @@
       const SWIPER = ".case_slider_layout";
       const NEXT_BUTTON = ".splide__arrow--prev";
       const PREVIOUS_BUTTON = ".splide__arrow--next";
+      const LOOP_MODE = "data-ix-caseslider-loop";
       const ACTIVE_CLASS = "is-active";
       const DISABLED_CLASS = "is-disabled";
       document.querySelectorAll(WRAP).forEach(function(wrap) {
         if (!wrap)
           return;
+        const loopMode = attr(false, wrap.getAttribute(LOOP_MODE));
         const nextButtonEl = wrap.querySelector(NEXT_BUTTON);
         const previousButtonEl = wrap.querySelector(PREVIOUS_BUTTON);
         const swiperEl = wrap.querySelector(SWIPER);
         if (!nextButtonEl || !previousButtonEl || !swiperEl)
           return;
+        let sliderType = "slide";
+        if (loopMode) {
+          sliderType = "loop";
+        }
         const splide = new Splide(swiperEl, {
-          type: "loop",
+          type: sliderType,
           speed: 800,
           dragAngleThreshold: 60,
           autoWidth: false,
