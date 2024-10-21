@@ -54,6 +54,57 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', scrollDirectionListener);
   };
 
+  const homeHeroLoad = function () {
+    const GRAPHIC = '[data-ix-homehero="graphic"]';
+    const DOT_LEFT = '[data-ix-homehero="dots-left"]';
+    const DOT_RIGHT = '[data-ix-homehero="dots-right"]';
+
+    const graphic = document.querySelector(GRAPHIC);
+    const dotLeft = document.querySelector(DOT_LEFT);
+    const dotRight = document.querySelector(DOT_RIGHT);
+
+    //check for elements
+    if (!graphic) return;
+
+    const tl = gsap.timeline({
+      delay: 2,
+      repeat: -1,
+      yoyo: true,
+      defaults: {
+        ease: 'power1.inOut',
+        duration: 10,
+      },
+    });
+    tl.fromTo(
+      graphic,
+      {
+        rotateZ: 0,
+      },
+      {
+        rotateZ: 25,
+      }
+    );
+    tl.fromTo(
+      dotLeft,
+      {
+        xPercent: 0,
+      },
+      {
+        xPercent: -30,
+      },
+      '<'
+    );
+    tl.fromTo(
+      dotRight,
+      {
+        yPercent: 0,
+      },
+      {
+        yPercent: 50,
+      },
+      '<'
+    );
+  };
   const homeHeroScroll = function (gsapContext) {
     //elements
     const WRAP = '[data-ix-homehero="wrap"]';
@@ -607,6 +658,7 @@ document.addEventListener('DOMContentLoaded', function () {
         workHeroSlider();
         caseSplide();
         ctaSlider(isMobile);
+        homeHeroLoad();
         homeHeroScroll(gsapContext);
         servicesSlider();
         newsSlider();
