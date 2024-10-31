@@ -82,7 +82,7 @@ export const horizontal = function (gsapContext) {
         const itemTheme = attr('light', item.getAttribute(ITEM_THEME));
         if (itemID === ID) {
           item.classList.add(ACTIVE_CLASS);
-          workWrap.setAttribute('data-theme', itemTheme);
+          // workWrap.setAttribute('data-theme', itemTheme);
           // wrap.style.backgroundColor = 'red';
         } else {
           item.classList.remove(ACTIVE_CLASS);

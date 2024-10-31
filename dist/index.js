@@ -1334,7 +1334,6 @@
           const itemTheme = attr("light", item.getAttribute(ITEM_THEME));
           if (itemID === ID) {
             item.classList.add(ACTIVE_CLASS);
-            workWrap.setAttribute("data-theme", itemTheme);
           } else {
             item.classList.remove(ACTIVE_CLASS);
           }
