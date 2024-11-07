@@ -60,6 +60,7 @@ export const scrolling = function (gsapContext) {
       scrub: 0.5,
       start: 'top bottom',
       end: 'bottom top',
+      markers: true,
     };
     // get custom timeline settings or set them at the default
     tlSettings.start = attr(tlSettings.start, scrollingItem.getAttribute(START));

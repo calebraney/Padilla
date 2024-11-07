@@ -1198,7 +1198,8 @@
       const tlSettings = {
         scrub: 0.5,
         start: "top bottom",
-        end: "bottom top"
+        end: "bottom top",
+        markers: true
       };
       tlSettings.start = attr(tlSettings.start, scrollingItem.getAttribute(START));
       tlSettings.end = attr(tlSettings.end, scrollingItem.getAttribute(END));
@@ -9177,7 +9178,7 @@
           filter: "blur(0px)"
         },
         {
-          filter: isMobile ? "blur(0px)" : "blur(8px)",
+          filter: isMobile ? "blur(32px)" : "blur(8px)",
           duration: 0.15
         },
         "<.05"
@@ -9494,10 +9495,10 @@
           workHeroSlider();
           caseSplide();
           ctaSlider(isMobile);
-          homeHeroScroll(gsapContext);
           servicesSlider();
           newsSlider();
           if (isDesktop || isTablet) {
+            homeHeroScroll(gsapContext);
             if (!reduceMotion) {
               homeHeroLoad();
             }
