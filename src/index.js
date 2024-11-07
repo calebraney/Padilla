@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //check for elements
     if (!graphic) return;
-
     const tl = gsap.timeline({
       delay: 2,
       repeat: -1,
@@ -658,10 +657,17 @@ document.addEventListener('DOMContentLoaded', function () {
         workHeroSlider();
         caseSplide();
         ctaSlider(isMobile);
-        homeHeroLoad();
         homeHeroScroll(gsapContext);
         servicesSlider();
         newsSlider();
+
+        //non-mobile interactions
+        if (isDesktop || isTablet) {
+          //optional animations
+          if (!reduceMotion) {
+            homeHeroLoad();
+          }
+        }
 
         // caseSlider()
         //conditional interactions

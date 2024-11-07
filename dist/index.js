@@ -1295,31 +1295,27 @@
       if (runOnBreakpoint === false)
         return;
       let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
-      const setScrollDistance = function() {
-        wrap.style.height = "calc(" + track.offsetWidth + "px + 100vh)";
-      };
-      let matchHeight = attr(true, wrap.getAttribute(OPTION_MATCH_HEIGHT));
-      if (matchHeight) {
-        setScrollDistance();
-        ScrollTrigger.refresh();
-        window.addEventListener("resize", setScrollDistance);
+      if (!isMobile) {
+        const setScrollDistance = function() {
+          wrap.style.height = "calc(" + track.offsetWidth + "px + 100vh)";
+        };
+        let matchHeight = attr(true, wrap.getAttribute(OPTION_MATCH_HEIGHT));
+        if (matchHeight) {
+          setScrollDistance();
+          ScrollTrigger.refresh();
+          window.addEventListener("resize", setScrollDistance);
+        }
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrap,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true
+          },
+          defaults: { ease: "none" }
+        });
+        tl.to(track, { xPercent: -100 });
       }
-      function containerLeft() {
-        return inner.offsetLeft + "px";
-      }
-      function containerRight() {
-        return inner.offsetLeft + inner.offsetWidth + "px";
-      }
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true
-        },
-        defaults: { ease: "none" }
-      });
-      tl.to(track, { xPercent: -100 });
       const activateSlide = function(ID) {
         bgItems.forEach((bgItem, index) => {
           const itemID = bgItem.getAttribute(ITEM_ID);
@@ -1359,9 +1355,8 @@
           let itemtl = gsap.timeline({
             scrollTrigger: {
               trigger: currentItem,
-              containerAnimation: tl,
-              start: "left center",
-              end: "right center",
+              start: "top center",
+              end: "bottom center",
               scrub: true,
               onEnter: () => {
                 activateSlide(ID);
@@ -9499,10 +9494,14 @@
           workHeroSlider();
           caseSplide();
           ctaSlider(isMobile);
-          homeHeroLoad();
           homeHeroScroll(gsapContext);
           servicesSlider();
           newsSlider();
+          if (isDesktop || isTablet) {
+            if (!reduceMotion) {
+              homeHeroLoad();
+            }
+          }
           if (!reduceMotion) {
             scrolling(gsapContext);
             scrollIn(gsapContext);

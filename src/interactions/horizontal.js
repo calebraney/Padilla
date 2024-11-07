@@ -35,37 +35,31 @@ export const horizontal = function (gsapContext) {
     //create variables from GSAP context
     let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
 
-    // function to set section height
-    const setScrollDistance = function () {
-      wrap.style.height = 'calc(' + track.offsetWidth + 'px + 100vh)';
-    };
-    //get option to see if height is matched
-    let matchHeight = attr(true, wrap.getAttribute(OPTION_MATCH_HEIGHT));
-    if (matchHeight) {
-      setScrollDistance();
-      ScrollTrigger.refresh();
-      window.addEventListener('resize', setScrollDistance);
-    }
+    //set up horizontal scroll and distance on desktop
+    if (!isMobile) {
+      // function to set section height
+      const setScrollDistance = function () {
+        wrap.style.height = 'calc(' + track.offsetWidth + 'px + 100vh)';
+      };
+      //get option to see if height is matched
+      let matchHeight = attr(true, wrap.getAttribute(OPTION_MATCH_HEIGHT));
+      if (matchHeight) {
+        setScrollDistance();
+        ScrollTrigger.refresh();
+        window.addEventListener('resize', setScrollDistance);
+      }
 
-    // get container left position
-    function containerLeft() {
-      return inner.offsetLeft + 'px';
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrap,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+        },
+        defaults: { ease: 'none' },
+      });
+      tl.to(track, { xPercent: -100 });
     }
-    // get container right position
-    function containerRight() {
-      return inner.offsetLeft + inner.offsetWidth + 'px';
-    }
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrap,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: true,
-      },
-      defaults: { ease: 'none' },
-    });
-    tl.to(track, { xPercent: -100 });
 
     //function to activate an item based on its ID
     const activateSlide = function (ID) {
@@ -83,7 +77,6 @@ export const horizontal = function (gsapContext) {
         if (itemID === ID) {
           item.classList.add(ACTIVE_CLASS);
           // workWrap.setAttribute('data-theme', itemTheme);
-          // wrap.style.backgroundColor = 'red';
         } else {
           item.classList.remove(ACTIVE_CLASS);
         }
@@ -113,9 +106,8 @@ export const horizontal = function (gsapContext) {
         let itemtl = gsap.timeline({
           scrollTrigger: {
             trigger: currentItem,
-            containerAnimation: tl,
-            start: 'left center',
-            end: 'right center',
+            start: 'top center',
+            end: 'bottom center',
             scrub: true,
             // markers: true,
             onEnter: () => {
