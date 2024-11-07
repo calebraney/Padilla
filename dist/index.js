@@ -9177,7 +9177,7 @@
           filter: "blur(0px)"
         },
         {
-          filter: isMobile ? "blur(16px)" : "blur(8px)",
+          filter: isMobile ? "blur(0px)" : "blur(8px)",
           duration: 0.15
         },
         "<.05"
