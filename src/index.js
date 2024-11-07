@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       {
         opacity: 0,
-        duration: isMobile ? 0.2 : 0.2,
+        duration: 0.2,
       },
       '<.8'
     );
@@ -233,8 +233,8 @@ document.addEventListener('DOMContentLoaded', function () {
         filter: 'blur(0px)',
       },
       {
-        filter: isMobile ? 'blur(32px)' : 'blur(8px)',
-        duration: isMobile ? 0.15 : 0.15,
+        filter: isMobile ? 'blur(16px)' : 'blur(8px)',
+        duration: 0.15,
       },
       '<.05'
     );
